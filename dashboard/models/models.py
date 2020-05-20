@@ -1555,11 +1555,7 @@ class Scan(db.Model):
 
         return gs
 
-    def update_header_diffs(self,
-                            standard=None,
-                            ignore=None,
-                            tolerance=None,
-                            bvals=False):
+    def update_header_diffs(self, standard=None, ignore=None, tolerance=None):
         if not self.json_contents:
             raise InvalidDataException("No JSON data found for series {}"
                                        "".format(self.name))
@@ -1580,7 +1576,7 @@ class Scan(db.Model):
                                               gs.json_contents,
                                               ignore=ignore,
                                               tolerance=tolerance)
-        if bvals:
+        if self.scantype.qc_type == 'dti':
             result = header_checks.check_bvals(self.json_path, gs.json_path)
             if result:
                 diffs['bvals'] = result
