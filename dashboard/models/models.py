@@ -461,6 +461,12 @@ class Study(db.Model):
                                  secondary=study_timepoints_table,
                                  back_populates='studies',
                                  lazy='dynamic')
+    expected_scans = db.relationship(
+        'ExpectedScan',
+        primaryjoin='Study.id==StudySite.study_id',
+        secondary='study_sites',
+        secondaryjoin='StudySite.study_id==ExpectedScan.study_id',
+        collection_class=lambda: utils.DictListCollection('site_id'))
 
     def __init__(self,
                  study_id,
@@ -1131,6 +1137,7 @@ class Session(db.Model):
     signed_off = db.Column('signed_off', db.Boolean, default=False)
     reviewer_id = db.Column('reviewer', db.Integer, db.ForeignKey('users.id'))
     review_date = db.Column('review_date', db.DateTime(timezone=True))
+    tech_notes = db.Column('tech_notes', db.String(1028))
 
     reviewer = db.relationship('User',
                                uselist=False,
@@ -1578,7 +1585,7 @@ class Scan(db.Model):
             if result:
                 diffs['bvals'] = result
 
-        found = False
+        found = []
         if self.header_diffs:
             found = [
                 item for item in self.header_diffs
@@ -1718,6 +1725,8 @@ class Scantype(db.Model):
     __tablename__ = 'scantypes'
 
     tag = db.Column('tag', db.String(64), primary_key=True)
+    qc_type = db.Column('qc_type', db.String(64))
+    pha_type = db.Column('pha_type', db.String(64))
 
     scans = db.relationship('Scan', back_populates='scantype')
     studies = association_proxy('study_scantypes', 'study')
@@ -2049,6 +2058,27 @@ class StudyScantype(db.Model):
     def __repr__(self):
         return "<StudyScantype {} - {}>".format(self.study_id,
                                                 self.scantype_id)
+
+
+class ExpectedScan(db.Model):
+    __tablename__ = 'expected_scans'
+
+    study_id = db.Column('study', db.String(32), primary_key=True)
+    site_id = db.Column('site', db.String(32), primary_key=True)
+    scantype = db.Column('scantype', db.String(64), primary_key=True)
+    count = db.Column('num_expected', db.Integer, default=0)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['study', 'site'],
+            ['study_sites.study', 'study_sites.site']),
+        ForeignKeyConstraint(
+            ['study', 'scantype'],
+            ['study_scantypes.study', 'study_scantypes.scantype']),
+    )
+
+    def __repr__(self):
+        return f"<ExpectedScan {self.study_id}-{self.site_id}-{self.scantype}>"
 
 
 class ScanGoldStandard(db.Model):
