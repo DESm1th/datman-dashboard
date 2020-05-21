@@ -226,6 +226,33 @@ def get_user(username):
     return query.all()
 
 
+def get_scantypes(tag_id=None, create=False):
+    """Get all tags (or one specific tag) defined in the database.
+
+    Args:
+        tag_id (str, optional): A single tag to look up. Defaults to None.
+        create (bool, optional): Whether to create a new record if tag_id
+            doesnt exist. Defaults to False.
+
+    Returns:
+        :obj:`list`: A list of Scantype records.
+    """
+    if not tag_id:
+        return Scantype.query.all()
+
+    found = Scantype.query.get(tag_id)
+    if found:
+        return [found]
+
+    if not create:
+        return []
+
+    new_tag = Scantype(tag_id)
+    db.session.add(new_tag)
+    db.session.commit()
+    return [new_tag]
+
+
 def query_metric_values_byid(**kwargs):
     """Queries the database for metrics matching the specifications.
         Arguments are lists of strings containing identifying names
