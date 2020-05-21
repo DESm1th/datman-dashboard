@@ -13,7 +13,7 @@ import datman.scanid as scanid
 logger = logging.getLogger(__name__)
 
 
-def get_study(name=None, tag=None, site=None):
+def get_study(name=None, tag=None, site=None, create=False):
     """Retrieve a study from the database.
 
     Requires enough information to uniquely identify a match in the database,
@@ -27,13 +27,22 @@ def get_study(name=None, tag=None, site=None):
             'name' in some cases. Defaults to None.
         site (str, optional): A session site ID tag (i.e. the code used to
             identify scan site). Defaults to None.
+        create (bool, optional): Whether to create the study if it doesnt
+            exist. This option is only considered if 'name' was provided.
 
     Returns:
         :obj:`list`: a list of :obj:`dashboard.models.Study` objects that match
             the given values or the empty list.
     """
     if name:
-        return Study.query.filter(Study.id == name).all()
+        found = Study.query.filter(Study.id == name).all()
+        if create and not found:
+            study = Study(name)
+            db.session.add(study)
+            db.session.commit()
+            return [study]
+        return found
+
     studies = StudySite.query.filter(StudySite.code == tag)
     if site:
         studies = studies.filter(StudySite.site_id == site)
