@@ -463,24 +463,32 @@ class Study(TableMixin, db.Model):
 
     users = db.relationship(
         'StudyUser',
-        primaryjoin='Study.id==StudySite.study_id',
-        secondary='study_sites',
-        secondaryjoin='StudySite.study_id==StudyUser.study_id')
+        primaryjoin='and_(Study.id==foreign(StudyUser.study_id), '
+                    'StudySite.study_id==StudyUser.study_id)',
+        cascade='all, delete')
     sites = db.relationship(
         'StudySite',
         back_populates='study',
-        collection_class=attribute_mapped_collection('site_id'))
+        collection_class=attribute_mapped_collection('site_id'),
+        cascade="all, delete")
     scantypes = association_proxy('study_scantypes', 'scantype')
-    timepoints = db.relationship('Timepoint',
-                                 secondary=study_timepoints_table,
-                                 back_populates='studies',
-                                 lazy='dynamic')
+    timepoints = db.relationship(
+        'Timepoint',
+        secondary=study_timepoints_table,
+        back_populates='studies',
+        lazy='dynamic',
+        cascade="all, delete")
     expected_scans = db.relationship(
         'ExpectedScan',
         primaryjoin='Study.id==StudySite.study_id',
         secondary='study_sites',
         secondaryjoin='StudySite.study_id==ExpectedScan.study_id',
-        collection_class=lambda: utils.DictListCollection('site_id'))
+        collection_class=lambda: utils.DictListCollection('site_id'),
+        cascade="all, delete")
+    standards = db.relationship(
+        'GoldStandard',
+        primaryjoin="Study.id==GoldStandard.study",
+        cascade="all, delete")
 
     def __init__(self,
                  study_id,
@@ -1689,9 +1697,15 @@ class Scantype(TableMixin, db.Model):
     qc_type = db.Column('qc_type', db.String(64))
     pha_type = db.Column('pha_type', db.String(64))
 
-    scans = db.relationship('Scan', back_populates='scantype')
+    scans = db.relationship(
+        'Scan',
+        back_populates='scantype',
+        cascade="all, delete")
+    metrictypes = db.relationship(
+        'Metrictype',
+        back_populates='scantype',
+        cascade="all, delete")
     studies = association_proxy('study_scantypes', 'study')
-    metrictypes = db.relationship('Metrictype', back_populates='scantype')
 
     def __init__(self, tag):
         self.tag = tag
@@ -1728,6 +1742,7 @@ class GoldStandard(db.Model):
         ForeignKeyConstraint(
             ['study', 'site'],
             ['study_sites.study', 'study_sites.site']),
+        ForeignKeyConstraint(['study'], ['studies.id']),
         UniqueConstraint(json_path, json_contents))
 
     def __init__(self, study, gs_json):
@@ -1883,12 +1898,13 @@ class StudyUser(db.Model):
         secondaryjoin='StudySite.study_id==Study.id',
         uselist=False,
         viewonly=True)
-    user = db.relationship('User', back_populates='studies')
+    user = db.relationship('User', back_populates='studies', viewonly=True)
 
     __table_args__ = (
         UniqueConstraint('study', 'user_id', 'site'),
         ForeignKeyConstraint(['study', 'site'],
                              ['study_sites.study', 'study_sites.site']),
+        ForeignKeyConstraint(['study'], ['studies.id'])
     )
 
     def __init__(self,
