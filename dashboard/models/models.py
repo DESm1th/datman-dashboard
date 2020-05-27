@@ -570,6 +570,106 @@ class Study(TableMixin, db.Model):
                                                gs_file, e))
         return new_gs
 
+    def add_scantype(self, tag_name):
+        if isinstance(tag_name, Scantype):
+            tag = tag_name
+        else:
+            tag = Scantype.query.get(tag_name)
+            if not tag:
+                raise InvalidDataException(f"Can't add scan type to {self.id} "
+                                           f"- {tag_name} undefined.")
+
+        if tag in self.scantypes:
+            return
+
+        new_tag = StudyScantype(self.id, tag_name)
+        db.session.add(new_tag)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise InvalidDataException(f"Failed to add scan type {tag_name} "
+                                       f"to study {self.id}. Reason - {e}")
+
+    def update_site(self, site_id, redcap=None, code=None, create=False):
+        """Update a site configured for this study (or configure a new one).
+
+        Args:
+            site_id (str or Site): The ID of a site associated with this study
+                or its record from the database.
+            redcap (bool, optional): True if redcap scan completed records are
+                used by this site. Defaults to None.
+            code (str, optional): The study code used for IDs for this study
+                and site combination. Defaults to None.
+            create (bool, optional): Whether to create the site and add it
+                to this study if it isnt already associated. Defaults to False.
+
+        Raises:
+            InvalidDataException: If the site doesnt exist or isn't associated
+                with this study (and create wasnt given) or if the update
+                fails.
+        """
+        if isinstance(site_id, Site):
+            site_id = Site.id
+        elif not Site.query.get(site_id):
+            if not create:
+                raise InvalidDataException(f"Site {site_id} does not exist.")
+            site = Site(site_id)
+            db.session.add(site)
+
+        if site_id not in self.sites:
+            if not create:
+                raise InvalidDataException(f"Invalid site {site_id} for study "
+                                           f"{self.id}")
+            study_site = StudySite(self.id, site_id)
+        else:
+            study_site = self.sites[site_id]
+
+        if redcap is not None:
+            study_site.uses_redcap = redcap
+
+        if code is not None:
+            study_site.code = code
+
+        db.session.add(study_site)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise InvalidDataException(f"Failed to update site {site_id} for "
+                                       f"study {self.id}. Reason - {e}")
+
+    def update_expected_scans(self, site_id, scantype, num):
+        if isinstance(site_id, Site):
+            site_id = site_id.id
+
+        if site_id not in self.sites:
+            raise InvalidDataException(f"Invalid site {site_id} for {self.id}")
+
+        if not isinstance(scantype, Scantype):
+            found = Scantype.query.get(scantype)
+            if not found:
+                raise InvalidDataException(f"Undefined scan type {scantype}.")
+            scantype = found
+
+        if scantype not in self.scantypes:
+            raise InvalidDataException(f"Invalid scan type {scantype.tag} for "
+                                       f"{self.id}")
+
+        expected = ExpectedScan.query.get((self.id, site_id, scantype.tag))
+        if expected:
+            expected.count = num
+        else:
+            expected = ExpectedScan(self.id, site_id, scantype.tag, num)
+
+        db.session.add(expected)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise InvalidDataException(f"Failed to update expected scans for "
+                                       f"{self.id}. Reason - {e}")
+
     def num_timepoints(self, type=''):
         if type.lower() == 'human':
             timepoints = [
@@ -2032,6 +2132,10 @@ class StudyScantype(db.Model):
     standards = db.relationship('GoldStandard',
                                 back_populates='study_scantype')
 
+    def __init__(self, study, scantype):
+        self.study_id = study
+        self.scantype_id = scantype
+
     def __repr__(self):
         return "<StudyScantype {} - {}>".format(self.study_id,
                                                 self.scantype_id)
@@ -2053,6 +2157,12 @@ class ExpectedScan(db.Model):
             ['study', 'scantype'],
             ['study_scantypes.study', 'study_scantypes.scantype']),
     )
+
+    def __init__(self, study, site, tag, count=0):
+        self.study_id = study
+        self.site_id = site
+        self.scantype = tag
+        self.count = count
 
     def __repr__(self):
         return f"<ExpectedScan {self.study_id}-{self.site_id}-{self.scantype}>"
