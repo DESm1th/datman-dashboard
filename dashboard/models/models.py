@@ -571,6 +571,16 @@ class Study(TableMixin, db.Model):
         return new_gs
 
     def add_scantype(self, tag_name):
+        """Allow a new tag to be used on scans in this study.
+
+        Args:
+            tag_name (str): The name of a scan type to add.
+
+        Raises:
+            InvalidDataException: If the scan type hasnt been defined before
+                being added to this study, or if an error occurs when the
+                database is updated.
+        """
         if isinstance(tag_name, Scantype):
             tag = tag_name
         else:
@@ -639,7 +649,25 @@ class Study(TableMixin, db.Model):
             raise InvalidDataException(f"Failed to update site {site_id} for "
                                        f"study {self.id}. Reason - {e}")
 
-    def update_expected_scans(self, site_id, scantype, num):
+    def update_expected_scans(self, site_id, scantype, num=None, pha_num=None):
+        """Update the number of scans expected for each site / tag combination.
+
+        Args:
+            site_id (str): The name of the site to configure.
+            scantype (str): The scan type to configure.
+            num (int, optional): The number of scans expected with this tag for
+                human subjects at this site. Only updates if value given.
+                Defaults to None.
+            pha_only (int, optional): The number of scans with this tag
+                expected for phantoms at this site. Only updates if value
+                given. Defaults to None.
+
+        Raises:
+            InvalidDataException: If a site that does not belong to this study
+                is given, a scan type that does not exist or isnt associated
+                with the study is given, or if an error occurs during database
+                update.
+        """
         if isinstance(site_id, Site):
             site_id = site_id.id
 
@@ -658,9 +686,13 @@ class Study(TableMixin, db.Model):
 
         expected = ExpectedScan.query.get((self.id, site_id, scantype.tag))
         if expected:
-            expected.count = num
+            if num:
+                expected.count = num
+            if pha_num:
+                expected.pha_count = pha_num
         else:
-            expected = ExpectedScan(self.id, site_id, scantype.tag, num)
+            expected = ExpectedScan(self.id, site_id, scantype.tag, num,
+                                    pha_num)
 
         db.session.add(expected)
         try:
@@ -2148,6 +2180,7 @@ class ExpectedScan(db.Model):
     site_id = db.Column('site', db.String(32), primary_key=True)
     scantype = db.Column('scantype', db.String(64), primary_key=True)
     count = db.Column('num_expected', db.Integer, default=0)
+    pha_count = db.Column('pha_num_expected', db.Integer, default=0)
 
     __table_args__ = (
         ForeignKeyConstraint(
@@ -2158,11 +2191,12 @@ class ExpectedScan(db.Model):
             ['study_scantypes.study', 'study_scantypes.scantype']),
     )
 
-    def __init__(self, study, site, tag, count=0):
+    def __init__(self, study, site, tag, count=0, pha_count=0):
         self.study_id = study
         self.site_id = site
         self.scantype = tag
         self.count = count
+        self.pha_count = pha_count
 
     def __repr__(self):
         return f"<ExpectedScan {self.study_id}-{self.site_id}-{self.scantype}>"

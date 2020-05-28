@@ -23,6 +23,7 @@ def upgrade():
         sa.Column('site', sa.String(length=32), nullable=False),
         sa.Column('scantype', sa.String(length=64), nullable=False),
         sa.Column('num_expected', sa.Integer(), nullable=True),
+        sa.Column('pha_num_expected', sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ['study', 'scantype'],
             ['study_scantypes.study', 'study_scantypes.scantype'], ),
