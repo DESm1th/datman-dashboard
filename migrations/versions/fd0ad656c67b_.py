@@ -22,8 +22,10 @@ def upgrade():
         sa.Column('study', sa.String(length=32), nullable=False),
         sa.Column('site', sa.String(length=32), nullable=False),
         sa.Column('scantype', sa.String(length=64), nullable=False),
-        sa.Column('num_expected', sa.Integer(), nullable=True),
-        sa.Column('pha_num_expected', sa.Integer(), nullable=True),
+        sa.Column('num_expected', sa.Integer(), nullable=True,
+                  server_default='0'),
+        sa.Column('pha_num_expected', sa.Integer(), nullable=True,
+                  server_default='0'),
         sa.ForeignKeyConstraint(
             ['study', 'scantype'],
             ['study_scantypes.study', 'study_scantypes.scantype'], ),
@@ -32,6 +34,10 @@ def upgrade():
             ['study_sites.study', 'study_sites.site'], ),
         sa.PrimaryKeyConstraint('study', 'site', 'scantype')
     )
+    op.add_column(
+        'study_sites',
+        sa.Column('uses_tech_notes', sa.Boolean, nullable=True,
+                  server_default='false'))
     op.add_column(
         'sessions',
         sa.Column('tech_notes', sa.String(length=1028), nullable=True))
@@ -44,6 +50,7 @@ def upgrade():
 
 
 def downgrade():
+    op.drop_column('study_sites', 'uses_tech_notes')
     op.drop_column('scantypes', 'qc_type')
     op.drop_column('scantypes', 'pha_type')
     op.drop_column('sessions', 'tech_notes')

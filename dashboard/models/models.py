@@ -601,16 +601,21 @@ class Study(TableMixin, db.Model):
             raise InvalidDataException(f"Failed to add scan type {tag_name} "
                                        f"to study {self.id}. Reason - {e}")
 
-    def update_site(self, site_id, redcap=None, code=None, create=False):
+    def update_site(self, site_id, redcap=None, notes=None, code=None,
+                    create=False):
         """Update a site configured for this study (or configure a new one).
 
         Args:
             site_id (str or Site): The ID of a site associated with this study
                 or its record from the database.
             redcap (bool, optional): True if redcap scan completed records are
-                used by this site. Defaults to None.
+                used by this site. Updates only if value provided.
+                Defaults to None.
+            notes (bool, optional): True if tech notes are provided by this
+                site. Updates only if value provided. Defaults to None.
             code (str, optional): The study code used for IDs for this study
-                and site combination. Defaults to None.
+                and site combination. Updates only if value provided.
+                Defaults to None.
             create (bool, optional): Whether to create the site and add it
                 to this study if it isnt already associated. Defaults to False.
 
@@ -637,6 +642,9 @@ class Study(TableMixin, db.Model):
 
         if redcap is not None:
             study_site.uses_redcap = redcap
+
+        if notes is not None:
+            study_site.tech_notes = notes
 
         if code is not None:
             study_site.code = code
@@ -2078,6 +2086,7 @@ class StudySite(db.Model):
                         db.ForeignKey('sites.name'),
                         primary_key=True)
     uses_redcap = db.Column('uses_redcap', db.Boolean, default=False)
+    tech_notes = db.Column('uses_tech_notes', db.Boolean, default=False)
     code = db.Column('code', db.String(32))
 
     # Need to specify the terms of the join to ensure users with
@@ -2097,10 +2106,12 @@ class StudySite(db.Model):
 
     __table_args__ = (UniqueConstraint(study_id, site_id), )
 
-    def __init__(self, study_id, site_id, uses_redcap=False, code=None):
+    def __init__(self, study_id, site_id, uses_redcap=False, uses_notes=False,
+                 code=None):
         self.study_id = study_id
         self.site_id = site_id
         self.uses_redcap = uses_redcap
+        self.tech_notes = uses_notes
         self.code = code
 
     def __repr__(self):
