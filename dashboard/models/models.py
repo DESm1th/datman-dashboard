@@ -605,7 +605,11 @@ class Study(TableMixin, db.Model):
     def delete_site(self, site):
         if site not in self.sites:
             return
-        self.sites[site].delete()
+        study_site = self.sites[site]
+        site = study_site.site
+        study_site.delete()
+        if not site.studies:
+            site.delete()
 
     def update_site(self, site_id, redcap=None, notes=None, code=None,
                     create=False):
@@ -2104,8 +2108,7 @@ class StudySite(TableMixin, db.Model):
         'or_(StudySite.site_id==StudyUser.site_id,'
         'StudyUser.site_id==None))',
         cascade="all, delete")
-    site = db.relationship(
-        'Site', back_populates='studies', cascade="all, delete")
+    site = db.relationship('Site', back_populates='studies')
     study = db.relationship('Study', back_populates='sites')
     alt_codes = db.relationship(
         'AltStudyCode',
