@@ -472,24 +472,17 @@ class Study(TableMixin, db.Model):
         back_populates='study',
         collection_class=attribute_mapped_collection('site_id'),
         cascade="all, delete")
-    scantypes = association_proxy('study_scantypes', 'scantype')
+    scantypes = db.relationship(
+        'ExpectedScan',
+        collection_class=lambda: utils.DictListCollection('site_id'),
+        cascade="all, delete")
     timepoints = db.relationship(
         'Timepoint',
         secondary=study_timepoints_table,
         back_populates='studies',
         lazy='dynamic',
         cascade="all, delete")
-    expected_scans = db.relationship(
-        'ExpectedScan',
-        primaryjoin='Study.id==StudySite.study_id',
-        secondary='study_sites',
-        secondaryjoin='StudySite.study_id==ExpectedScan.study_id',
-        collection_class=lambda: utils.DictListCollection('site_id'),
-        cascade="all, delete")
-    standards = db.relationship(
-        'GoldStandard',
-        primaryjoin="Study.id==GoldStandard.study",
-        cascade="all, delete")
+    standards = db.relationship('GoldStandard', cascade="all, delete")
 
     def __init__(self,
                  study_id,
@@ -571,36 +564,47 @@ class Study(TableMixin, db.Model):
                                                gs_file, e))
         return new_gs
 
-    def add_scantype(self, tag_name):
-        """Allow a new tag to be used on scans in this study.
+    # def add_scantype(self, tag_name):
+    #     """Allow a new tag to be used on scans in this study.
 
-        Args:
-            tag_name (str): The name of a scan type to add.
+    #     Args:
+    #         tag_name (str): The name of a scan type to add.
 
-        Raises:
-            InvalidDataException: If the scan type hasnt been defined before
-                being added to this study, or if an error occurs when the
-                database is updated.
-        """
-        if isinstance(tag_name, Scantype):
-            tag = tag_name
-        else:
-            tag = Scantype.query.get(tag_name)
-            if not tag:
-                raise InvalidDataException(f"Can't add scan type to {self.id} "
-                                           f"- {tag_name} undefined.")
+    #     Raises:
+    #         InvalidDataException: If the scan type hasnt been defined before
+    #             being added to this study, or if an error occurs when the
+    #             database is updated.
+    #     """
+    #     if isinstance(tag_name, Scantype):
+    #         tag = tag_name
+    #     else:
+    #         tag = Scantype.query.get(tag_name)
+    #         if not tag:
+    #             raise InvalidDataException(f"Can't add scan type to {self.id} "
+    #                                        f"- {tag_name} undefined.")
 
-        if tag in self.scantypes:
-            return
+    #     if tag in self.scantypes:
+    #         return
 
-        new_tag = StudyScantype(self.id, tag_name)
-        db.session.add(new_tag)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException(f"Failed to add scan type {tag_name} "
-                                       f"to study {self.id}. Reason - {e}")
+    #     new_tag = StudyScantype(self.id, tag_name)
+    #     db.session.add(new_tag)
+    #     try:
+    #         db.session.commit()
+    #     except Exception as e:
+    #         db.session.rollback()
+    #         raise InvalidDataException(f"Failed to add scan type {tag_name} "
+    #                                    f"to study {self.id}. Reason - {e}")
+
+    # def delete_scantype(self, tag_name):
+    #     found = StudyScantype.query.get((self.id, tag_name))
+    #     if not found:
+    #         return
+    #     scans = Scan.query
+    #         .filter(Scan.timepoint == study_timepoints_table.c.timepoint)
+    #         .filter(study_timepoints_table.c.study == self.id)
+    #         .filter(Scan.tag == tag_name)
+    #     print(scans.count())
+    #     # found.delete()
 
     def delete_site(self, site):
         if site not in self.sites:
@@ -667,24 +671,26 @@ class Study(TableMixin, db.Model):
             raise InvalidDataException(f"Failed to update site {site_id} for "
                                        f"study {self.id}. Reason - {e}")
 
-    def update_expected_scans(self, site_id, scantype, num=None, pha_num=None):
+    def update_scantype(self, site_id, scantype, num=None, pha_num=None,
+                        create=False):
         """Update the number of scans expected for each site / tag combination.
 
         Args:
-            site_id (str): The name of the site to configure.
-            scantype (str): The scan type to configure.
+            site_id (str or Site): The site to configure.
+            scantype (str or Scantype): The scan type to configure.
             num (int, optional): The number of scans expected with this tag for
                 human subjects at this site. Only updates if value given.
                 Defaults to None.
             pha_only (int, optional): The number of scans with this tag
                 expected for phantoms at this site. Only updates if value
                 given. Defaults to None.
+            create (bool, optional): Whether to add a new record for the
+                study/site/tag combination if one doesnt exist.
 
         Raises:
-            InvalidDataException: If a site that does not belong to this study
-                is given, a scan type that does not exist or isnt associated
-                with the study is given, or if an error occurs during database
-                update.
+            InvalidDataException: If a site is given that isn't configured for
+                this study, if the scan type does not exist, or if an error
+                occurs during database update.
         """
         if isinstance(site_id, Site):
             site_id = site_id.id
@@ -698,19 +704,20 @@ class Study(TableMixin, db.Model):
                 raise InvalidDataException(f"Undefined scan type {scantype}.")
             scantype = found
 
-        if scantype not in self.scantypes:
-            raise InvalidDataException(f"Invalid scan type {scantype.tag} for "
-                                       f"{self.id}")
-
         expected = ExpectedScan.query.get((self.id, site_id, scantype.tag))
         if expected:
             if num:
                 expected.count = num
             if pha_num:
                 expected.pha_count = pha_num
-        else:
+        elif create:
             expected = ExpectedScan(self.id, site_id, scantype.tag, num,
                                     pha_num)
+        else:
+            raise InvalidDataException(
+                f"Tag {scantype.tag} not accepted for study {self.id} "
+                f"and site {site_id} combination."
+            )
 
         db.session.add(expected)
         try:
@@ -906,30 +913,30 @@ class Study(TableMixin, db.Model):
                                       self.id)))
         return query
 
-    def get_valid_metric_names(self):
-        """
-        Return a list of metric names with duplicates removed.
+    # def get_valid_metric_names(self):
+    #     """
+    #     Return a list of metric names with duplicates removed.
 
-        TODO: This entire method needs to be updated to be less hard-coded. We
-        should get the 'type' of scan from our config file 'qc_type' field
-        instead (and store it in the database). For now I just got it
-        working with the new schema - Dawn
-        """
-        valid_fmri_scantypes = [
-            'IMI', 'RST', 'EMP', 'OBS', 'SPRL-COMB', 'VN-SPRL-COMB'
-        ]
-        names = []
-        for scantype in self.scantypes:
-            for metrictype in scantype.metrictypes:
-                if scantype.tag.startswith('DTI'):
-                    names.append(('DTI', metrictype.name))
-                elif scantype.tag in valid_fmri_scantypes:
-                    names.append(('FMRI', metrictype.name))
-                elif scantype.tag == 'T1':
-                    names.append(('T1', metrictype.name))
+    #     TODO: This entire method needs to be updated to be less hard-coded. We
+    #     should get the 'type' of scan from our config file 'qc_type' field
+    #     instead (and store it in the database). For now I just got it
+    #     working with the new schema - Dawn
+    #     """
+    #     valid_fmri_scantypes = [
+    #         'IMI', 'RST', 'EMP', 'OBS', 'SPRL-COMB', 'VN-SPRL-COMB'
+    #     ]
+    #     names = []
+    #     for scantype in self.scantypes:
+    #         for metrictype in scantype.metrictypes:
+    #             if scantype.tag.startswith('DTI'):
+    #                 names.append(('DTI', metrictype.name))
+    #             elif scantype.tag in valid_fmri_scantypes:
+    #                 names.append(('FMRI', metrictype.name))
+    #             elif scantype.tag == 'T1':
+    #                 names.append(('T1', metrictype.name))
 
-        names = sorted(set(names))
-        return names
+    #     names = sorted(set(names))
+    #     return names
 
     def get_primary_contacts(self):
         contacts = [
@@ -1856,7 +1863,7 @@ class Scantype(TableMixin, db.Model):
         'Metrictype',
         back_populates='scantype',
         cascade="all, delete")
-    studies = association_proxy('study_scantypes', 'study')
+    studies = association_proxy('expected_scans', 'scantype')
 
     def __init__(self, tag):
         self.tag = tag
@@ -1876,24 +1883,21 @@ class GoldStandard(db.Model):
     json_contents = db.Column('contents', JSONB)
     json_path = db.Column('json_path', db.String(1028))
 
-    study_site = db.relationship('StudySite',
-                                 uselist=False,
-                                 back_populates='standards',
-                                 viewonly=True)
-    study_scantype = db.relationship('StudyScantype',
-                                     uselist=False,
-                                     back_populates='standards',
-                                     viewonly=True)
+    expected = db.relationship('ExpectedScan', uselist=False)
     scans = association_proxy('scan_gold_standard', 'scan')
 
     __table_args__ = (
         ForeignKeyConstraint(
-            ['study', 'scantype'],
-            ['study_scantypes.study', 'study_scantypes.scantype']),
+            ['study', 'site', 'scantype'],
+            ['expected_scans.study', 'expected_scans.site',
+             'expected_scans.scantype'],
+            name='gold_standards_expected_scan_fkey'
+        ),
         ForeignKeyConstraint(
-            ['study', 'site'],
-            ['study_sites.study', 'study_sites.site']),
-        ForeignKeyConstraint(['study'], ['studies.id']),
+            ['study'],
+            ['studies.id'],
+            name='gold_standards_valid_studies_fkey'
+        ),
         UniqueConstraint(json_path, json_contents))
 
     def __init__(self, study, gs_json):
@@ -2054,8 +2058,7 @@ class StudyUser(db.Model):
     __table_args__ = (
         UniqueConstraint('study', 'user_id', 'site'),
         ForeignKeyConstraint(['study', 'site'],
-                             ['study_sites.study', 'study_sites.site']),
-        ForeignKeyConstraint(['study'], ['studies.id'])
+                             ['study_sites.study', 'study_sites.site'])
     )
 
     def __init__(self,
@@ -2115,10 +2118,10 @@ class StudySite(TableMixin, db.Model):
         back_populates='study_site',
         cascade='all, delete',
         lazy='joined')
-    standards = db.relationship(
-        'GoldStandard',
-        back_populates='study_site',
-        cascade="all, delete")
+    # standards = db.relationship(
+    #     'GoldStandard',
+    #     back_populates='study_site',
+    #     cascade="all, delete")
     expected_scans = db.relationship('ExpectedScan', cascade="all, delete")
 
     __table_args__ = (UniqueConstraint(study_id, site_id), )
@@ -2171,63 +2174,91 @@ class AltStudyCode(db.Model):
                                                    self.code)
 
 
-class StudyScantype(db.Model):
-    __tablename__ = 'study_scantypes'
-
-    study_id = db.Column('study',
-                         db.String(32),
-                         db.ForeignKey('studies.id'),
-                         primary_key=True)
-    scantype_id = db.Column('scantype',
-                            db.String(64),
-                            db.ForeignKey('scantypes.tag'),
-                            primary_key=True)
-
-    study = db.relationship(Study,
-                            backref=backref('study_scantypes',
-                                            cascade="all, delete-orphan"))
-    scantype = db.relationship(Scantype,
-                               backref=backref('study_scantypes',
-                                               cascade="all, delete-orphan"))
-    standards = db.relationship('GoldStandard',
-                                back_populates='study_scantype')
-
-    def __init__(self, study, scantype):
-        self.study_id = study
-        self.scantype_id = scantype
-
-    def __repr__(self):
-        return "<StudyScantype {} - {}>".format(self.study_id,
-                                                self.scantype_id)
-
-
 class ExpectedScan(TableMixin, db.Model):
     __tablename__ = 'expected_scans'
 
     study_id = db.Column('study', db.String(32), primary_key=True)
     site_id = db.Column('site', db.String(32), primary_key=True)
-    scantype = db.Column('scantype', db.String(64), primary_key=True)
+    scantype_id = db.Column('scantype', db.String(64), primary_key=True)
     count = db.Column('num_expected', db.Integer, default=0)
     pha_count = db.Column('pha_num_expected', db.Integer, default=0)
 
     __table_args__ = (
+        ForeignKeyConstraint(['study'], ['studies.id'],
+                             name='expected_scans_study_fkey'),
+        ForeignKeyConstraint(['site'], ['sites.name'],
+                             name='expected_scans_site_fkey'),
+        ForeignKeyConstraint(['scantype'], ['scantypes.tag'],
+                             name='expected_scans_scantype_fkey'),
         ForeignKeyConstraint(
             ['study', 'site'],
-            ['study_sites.study', 'study_sites.site']),
-        ForeignKeyConstraint(
-            ['study', 'scantype'],
-            ['study_scantypes.study', 'study_scantypes.scantype']),
+            ['study_sites.study', 'study_sites.site'],
+            name='expected_scans_allowed_sites_fkey'
+        ),
     )
 
-    def __init__(self, study, site, tag, count=0, pha_count=0):
+    # study = db.relationship(Study,
+    #                         backref=backref('study_scantypes',
+    #                                         cascade="all, delete-orphan"))
+    # scantype = db.relationship(Scantype,
+    #                            backref=backref('study_scantypes',
+    #                                            cascade="all, delete-orphan"))
+    # standards = db.relationship('GoldStandard',
+    #                             back_populates='study_scantype',
+    #                             cascade="all, delete")
+    # scans = db.relationship(
+    #     'Scan',
+    #     # primaryjoin='foreign(Scan.tag)==StudyScantype.scantype_id',
+    #     secondary='study_timepoints',
+    #     secondaryjoin='and_('\
+    #         'foreign(Scan.timepoint)==study_timepoints.c.timepoint, '\
+    #         'StudyScantype.study_id==foreign(study_timepoints.c.study), '\
+    #         'foreign(Scan.tag)==StudyScantype.scantype_id)'
+    # )
+    # scans = db.relationship(
+    #     'Scan',
+
+    # )
+
+    def __init__(self, study, site, scantype, count=0, pha_count=0):
         self.study_id = study
         self.site_id = site
-        self.scantype = tag
+        self.scantype_id = scantype
         self.count = count
         self.pha_count = pha_count
 
     def __repr__(self):
-        return f"<ExpectedScan {self.study_id}-{self.site_id}-{self.scantype}>"
+        return "<ExpectedScan {}-{}: {}>".format(
+            self.study_id, self.site_id, self.scantype_id)
+
+
+# class ExpectedScan(TableMixin, db.Model):
+#     __tablename__ = 'expected_scans'
+
+#     study_id = db.Column('study', db.String(32), primary_key=True)
+#     site_id = db.Column('site', db.String(32), primary_key=True)
+#     scantype = db.Column('scantype', db.String(64), primary_key=True)
+#     count = db.Column('num_expected', db.Integer, default=0)
+#     pha_count = db.Column('pha_num_expected', db.Integer, default=0)
+
+#     __table_args__ = (
+#         ForeignKeyConstraint(
+#             ['study', 'site'],
+#             ['study_sites.study', 'study_sites.site']),
+#         ForeignKeyConstraint(
+#             ['study', 'scantype'],
+#             ['study_scantypes.study', 'study_scantypes.scantype']),
+#     )
+
+#     def __init__(self, study, site, tag, count=0, pha_count=0):
+#         self.study_id = study
+#         self.site_id = site
+#         self.scantype = tag
+#         self.count = count
+#         self.pha_count = pha_count
+
+#     def __repr__(self):
+#         return f"<ExpectedScan {self.study_id}-{self.site_id}-{self.scantype}>"
 
 
 class ScanGoldStandard(db.Model):
