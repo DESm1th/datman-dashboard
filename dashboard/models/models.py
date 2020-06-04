@@ -549,19 +549,15 @@ class Study(TableMixin, db.Model):
         except IntegrityError as e:
             db.session.rollback()
             str_err = str(e)
-            if 'study_scantypes' in str_err:
+            if 'not present in table "expected_scans"' in str_err:
                 raise InvalidDataException(
-                    "Attempted to add gold standard for "
-                    "invalid study / scan type - {}".format(gs_file))
-            elif 'study_sites' in str_err:
+                    "Attempted to add gold standard with invalid "
+                    "Study/Site/Tag combination."
+                )
+            else:
                 raise InvalidDataException(
-                    "Attempted to add gold standard for "
-                    "invalid study / site - {}".format(gs_file))
-            elif 'gold_standards_json_path_contents_constraint' in str_err:
-                raise InvalidDataException("Failed to add gold standard {}. "
-                                           "Record already exists "
-                                           "in database - {}".format(
-                                               gs_file, e))
+                    f"Failed to add gold standard {gs_file}. Reason - {e}"
+                )
         return new_gs
 
     def delete_scantype(self, site_id, scantype):
