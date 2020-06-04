@@ -41,8 +41,12 @@ def get_studies(name=None, tag=None, site=None, create=False):
         found = query.filter(Study.id == name).all()
         if create and not found:
             study = Study(name)
-            db.session.add(study)
-            db.session.commit()
+            try:
+                db.session.add(study)
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                raise e
             found = [study]
         return found
 
@@ -260,8 +264,14 @@ def get_scantypes(tag_id=None, create=False):
         return []
 
     new_tag = Scantype(tag_id)
-    db.session.add(new_tag)
-    db.session.commit()
+
+    try:
+        db.session.add(new_tag)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
     return [new_tag]
 
 
