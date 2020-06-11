@@ -466,23 +466,32 @@ class Study(TableMixin, db.Model):
         'StudyUser',
         primaryjoin='and_(Study.id==foreign(StudyUser.study_id), '
                     'StudySite.study_id==StudyUser.study_id)',
-        cascade='all, delete')
+        cascade='all, delete',
+    )
     sites = db.relationship(
         'StudySite',
         back_populates='study',
         collection_class=attribute_mapped_collection('site_id'),
-        cascade="all, delete")
+        cascade="all, delete",
+    )
     scantypes = db.relationship(
         'ExpectedScan',
         collection_class=lambda: utils.DictListCollection('site_id'),
-        cascade="all, delete")
+        cascade="all, delete",
+    )
     timepoints = db.relationship(
         'Timepoint',
         secondary=study_timepoints_table,
         back_populates='studies',
         lazy='dynamic',
-        cascade="all, delete")
-    standards = db.relationship('GoldStandard', cascade="all, delete")
+        cascade="all, delete",
+    )
+    standards = db.relationship(
+        'GoldStandard',
+        secondary='expected_scans',
+        collection_class=lambda: utils.DictListCollection('site'),
+        viewonly=True,
+    )
 
     def __init__(self,
                  study_id,
@@ -622,7 +631,7 @@ class Study(TableMixin, db.Model):
             study_site.uses_redcap = redcap
 
         if notes is not None:
-            study_site.tech_notes = notes
+            study_site.uses_notes = notes
 
         if code is not None:
             study_site.code = code
@@ -934,6 +943,18 @@ class Study(TableMixin, db.Model):
         """
         next_idx = randint(0, len(user_list) - 1)
         return user_list[next_idx]
+
+    def delete(self):
+        for study_site in self.sites.values():
+            if len(study_site.site.studies) == 1:
+                # Clean up sites not used by any other study
+                study_site.site.delete()
+        for site in self.scantypes:
+            for expected_scan in self.scantypes[site]:
+                if len(expected_scan.scantype.studies) == 1:
+                    # Clean up tags not used by any other study
+                    expected_scan.scantype.delete()
+        super().delete()
 
     def __repr__(self):
         return "<Study {}>".format(self.id)
@@ -1787,6 +1808,48 @@ class ScanChecklist(TableMixin, db.Model):
             self.scan_id, self.user_id)
 
 
+class ExpectedScan(TableMixin, db.Model):
+    __tablename__ = 'expected_scans'
+
+    study_id = db.Column('study', db.String(32), primary_key=True)
+    site_id = db.Column('site', db.String(32), primary_key=True)
+    scantype_id = db.Column('scantype', db.String(64), primary_key=True)
+    count = db.Column('num_expected', db.Integer, default=0)
+    pha_count = db.Column('pha_num_expected', db.Integer, default=0)
+
+    scantype = db.relationship('Scantype', back_populates='expected_scans')
+    standards = db.relationship(
+        'GoldStandard',
+        back_populates='expected_scan',
+        cascade='all, delete'
+    )
+
+    __table_args__ = (
+        ForeignKeyConstraint(['study'], ['studies.id'],
+                             name='expected_scans_study_fkey'),
+        ForeignKeyConstraint(['site'], ['sites.name'],
+                             name='expected_scans_site_fkey'),
+        ForeignKeyConstraint(['scantype'], ['scantypes.tag'],
+                             name='expected_scans_scantype_fkey'),
+        ForeignKeyConstraint(
+            ['study', 'site'],
+            ['study_sites.study', 'study_sites.site'],
+            name='expected_scans_allowed_sites_fkey'
+        ),
+    )
+
+    def __init__(self, study, site, scantype, count=0, pha_count=0):
+        self.study_id = study
+        self.site_id = site
+        self.scantype_id = scantype
+        self.count = count
+        self.pha_count = pha_count
+
+    def __repr__(self):
+        return "<ExpectedScan {}-{}: {}>".format(
+            self.study_id, self.site_id, self.scantype_id)
+
+
 class Scantype(TableMixin, db.Model):
     __tablename__ = 'scantypes'
 
@@ -1797,12 +1860,24 @@ class Scantype(TableMixin, db.Model):
     scans = db.relationship(
         'Scan',
         back_populates='scantype',
-        cascade="all, delete")
+        cascade="all, delete"
+    )
     metrictypes = db.relationship(
         'Metrictype',
         back_populates='scantype',
-        cascade="all, delete")
-    studies = association_proxy('expected_scans', 'scantype')
+        cascade="all, delete"
+    )
+    expected_scans = db.relationship(
+        'ExpectedScan',
+        back_populates='scantype',
+        cascade='all, delete'
+    )
+    # viewonly=True to avoid breaking delete cascade through expected_scans
+    studies = db.relationship(
+        'Study',
+        secondary='expected_scans',
+        viewonly=True
+    )
 
     def __init__(self, tag):
         self.tag = tag
@@ -1822,22 +1897,18 @@ class GoldStandard(db.Model):
     json_contents = db.Column('contents', JSONB)
     json_path = db.Column('json_path', db.String(1028))
 
-    expected = db.relationship('ExpectedScan', uselist=False)
     scans = association_proxy('scan_gold_standard', 'scan')
+    expected_scan = db.relationship('ExpectedScan', back_populates='standards')
 
     __table_args__ = (
         ForeignKeyConstraint(
             ['study', 'site', 'scantype'],
             ['expected_scans.study', 'expected_scans.site',
              'expected_scans.scantype'],
-            name='gold_standards_expected_scan_fkey'
+            name='gold_standards_expected_scan_fkey',
         ),
-        ForeignKeyConstraint(
-            ['study'],
-            ['studies.id'],
-            name='gold_standards_valid_studies_fkey'
-        ),
-        UniqueConstraint(json_path, json_contents))
+        UniqueConstraint(json_path, json_contents)
+    )
 
     def __init__(self, study, gs_json):
         try:
@@ -2039,7 +2110,7 @@ class StudySite(TableMixin, db.Model):
                         db.ForeignKey('sites.name'),
                         primary_key=True)
     uses_redcap = db.Column('uses_redcap', db.Boolean, default=False)
-    tech_notes = db.Column('uses_tech_notes', db.Boolean, default=False)
+    uses_notes = db.Column('uses_tech_notes', db.Boolean, default=False)
     code = db.Column('code', db.String(32))
 
     # Need to specify the terms of the join to ensure users with
@@ -2066,7 +2137,7 @@ class StudySite(TableMixin, db.Model):
         self.study_id = study_id
         self.site_id = site_id
         self.uses_redcap = uses_redcap
-        self.tech_notes = uses_notes
+        self.uses_notes = uses_notes
         self.code = code
 
     def __repr__(self):
@@ -2109,77 +2180,24 @@ class AltStudyCode(db.Model):
                                                    self.code)
 
 
-class ExpectedScan(TableMixin, db.Model):
-    __tablename__ = 'expected_scans'
-
-    study_id = db.Column('study', db.String(32), primary_key=True)
-    site_id = db.Column('site', db.String(32), primary_key=True)
-    scantype_id = db.Column('scantype', db.String(64), primary_key=True)
-    count = db.Column('num_expected', db.Integer, default=0)
-    pha_count = db.Column('pha_num_expected', db.Integer, default=0)
-
-    gold_standards = db.relationship('GoldStandard', cascade='all, delete')
-
-    __table_args__ = (
-        ForeignKeyConstraint(['study'], ['studies.id'],
-                             name='expected_scans_study_fkey'),
-        ForeignKeyConstraint(['site'], ['sites.name'],
-                             name='expected_scans_site_fkey'),
-        ForeignKeyConstraint(['scantype'], ['scantypes.tag'],
-                             name='expected_scans_scantype_fkey'),
-        ForeignKeyConstraint(
-            ['study', 'site'],
-            ['study_sites.study', 'study_sites.site'],
-            name='expected_scans_allowed_sites_fkey'
-        ),
-    )
-
-    # study = db.relationship(Study,
-    #                         backref=backref('study_scantypes',
-    #                                         cascade="all, delete-orphan"))
-    # scantype = db.relationship(Scantype,
-    #                            backref=backref('study_scantypes',
-    #                                            cascade="all, delete-orphan"))
-    # standards = db.relationship('GoldStandard',
-    #                             back_populates='study_scantype',
-    #                             cascade="all, delete")
-    # scans = db.relationship(
-    #     'Scan',
-    #     # primaryjoin='foreign(Scan.tag)==StudyScantype.scantype_id',
-    #     secondary='study_timepoints',
-    #     secondaryjoin='and_('\
-    #         'foreign(Scan.timepoint)==study_timepoints.c.timepoint, '\
-    #         'StudyScantype.study_id==foreign(study_timepoints.c.study), '\
-    #         'foreign(Scan.tag)==StudyScantype.scantype_id)'
-    # )
-    # scans = db.relationship(
-    #     'Scan',
-
-    # )
-
-    def __init__(self, study, site, scantype, count=0, pha_count=0):
-        self.study_id = study
-        self.site_id = site
-        self.scantype_id = scantype
-        self.count = count
-        self.pha_count = pha_count
-
-    def __repr__(self):
-        return "<ExpectedScan {}-{}: {}>".format(
-            self.study_id, self.site_id, self.scantype_id)
-
-
 class ScanGoldStandard(db.Model):
     __tablename__ = 'scan_gold_standard'
 
-    scan_id = db.Column('scan',
-                        db.Integer,
-                        db.ForeignKey('scans.id'),
-                        primary_key=True)
-    gold_standard_id = db.Column('gold_standard',
-                                 db.Integer,
-                                 db.ForeignKey('gold_standards.id'),
-                                 primary_key=True)
+    scan_id = db.Column(
+        'scan',
+        db.Integer,
+        db.ForeignKey('scans.id'),
+        primary_key=True
+    )
+    gold_standard_id = db.Column(
+        'gold_standard',
+        db.Integer,
+        db.ForeignKey(
+            'gold_standards.id',
+            name='scan_gold_standard_gold_standard_fkey'
+        ),
+        primary_key=True
+    )
     diffs = db.Column('header_diffs', JSONB)
     date_added = db.Column('date_added',
                            db.DateTime(timezone=True),
@@ -2192,7 +2210,8 @@ class ScanGoldStandard(db.Model):
                            uselist=False)
     gold_standard = db.relationship(
         GoldStandard,
-        backref=backref('scan_gold_standard', cascade="all, delete"))
+        backref=backref('scan_gold_standard', cascade="all, delete"),
+    )
 
     def __init__(self,
                  scan_id,

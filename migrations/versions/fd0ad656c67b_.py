@@ -79,11 +79,13 @@ def upgrade():
                        type_='foreignkey')
     op.drop_constraint('gold_standards_study_fkey1', 'gold_standards',
                        type_='foreignkey')
-    op.create_foreign_key('gold_standards_expected_scans_fkey',
-                          'gold_standards',
-                          'expected_scans',
-                          ['study', 'site', 'scantype'],
-                          ['study', 'site', 'scantype'])
+    op.create_foreign_key(
+        'gold_standards_expected_scans_fkey',
+        'gold_standards',
+        'expected_scans',
+        ['study', 'site', 'scantype'],
+        ['study', 'site', 'scantype'],
+    )
     op.create_foreign_key('gold_standards_studies_fkey',
                           'gold_standards', 'studies',
                           ['study'],
