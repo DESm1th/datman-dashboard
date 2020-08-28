@@ -21,6 +21,14 @@ depends_on = None
 
 
 def upgrade():
+    op.alter_column(
+        'studies',
+        'is_open',
+        existing_type=sa.BOOLEAN(),
+        nullable=False,
+        existing_server_default=sa.text('true')
+    )
+
     expected_scans = op.create_table(
         'expected_scans',
         sa.Column('study', sa.String(length=32), nullable=False),
@@ -86,14 +94,18 @@ def upgrade():
         ['study', 'site', 'scantype'],
         ['study', 'site', 'scantype'],
     )
-    op.create_foreign_key('gold_standards_studies_fkey',
-                          'gold_standards', 'studies',
-                          ['study'],
-                          ['id'])
     op.drop_table('study_scantypes')
 
 
 def downgrade():
+    op.alter_column(
+        'studies',
+        'is_open',
+        existing_type=sa.BOOLEAN(),
+        nullable=True,
+        existing_server_default=sa.text('true')
+    )
+
     study_scantypes = op.create_table(
         'study_scantypes',
         sa.Column('study', sa.String(length=32), nullable=False),
@@ -125,8 +137,6 @@ def downgrade():
          for record in records]
     )
 
-    op.drop_constraint('gold_standards_studies_fkey', 'gold_standards',
-                       type_='foreignkey')
     op.drop_constraint('gold_standards_expected_scans_fkey', 'gold_standards',
                        type_='foreignkey')
     op.create_foreign_key('gold_standards_study_fkey1',

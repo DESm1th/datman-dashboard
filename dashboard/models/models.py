@@ -459,7 +459,7 @@ class Study(TableMixin, db.Model):
     name = db.Column('name', db.String(1024))
     description = db.Column('description', db.Text)
     read_me = deferred(db.Column('read_me', db.Text))
-    is_open = db.Column('is_open', db.Boolean)
+    is_open = db.Column('is_open', db.Boolean, default=True, nullable=False)
     email_qc = db.Column('email_on_trigger', db.Boolean)
 
     users = db.relationship(
