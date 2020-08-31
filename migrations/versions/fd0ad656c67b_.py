@@ -67,6 +67,10 @@ def upgrade():
     )
 
     op.add_column(
+        'scans',
+        sa.Column('length', sa.Integer, nullable=True)
+    )
+    op.add_column(
         'study_sites',
         sa.Column('uses_tech_notes', sa.Boolean, nullable=True,
                   server_default='false')
@@ -149,6 +153,7 @@ def downgrade():
                           'study_scantypes',
                           ['study', 'scantype'],
                           ['study', 'scantype'])
+    op.drop_column('scans', 'length')
     op.drop_column('study_sites', 'uses_tech_notes')
     op.drop_column('scantypes', 'qc_type')
     op.drop_column('scantypes', 'pha_type')

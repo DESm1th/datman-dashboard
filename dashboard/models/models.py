@@ -1527,6 +1527,7 @@ class Scan(TableMixin, db.Model):
                     db.ForeignKey('scantypes.tag'),
                     nullable=False)
     description = db.Column('description', db.String(128))
+    length = db.Column('length', db.Integer, nullable=True)
     conv_errors = db.Column('conversion_errors', db.Text)
     json_path = db.Column('json_path', db.String(1028))
     json_contents = db.Column('json_contents', JSONB)
