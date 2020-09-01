@@ -1137,6 +1137,13 @@ class Timepoint(TableMixin, db.Model):
         return uses_redcap and any(not sess.redcap_record
                                    for sess in self.sessions.values())
 
+    def expects_notes(self, study=None):
+        if self.is_phantom:
+            return False
+        study = self.get_study(study)
+        study_site = study.sites[self.site.name]
+        return study_site.uses_notes
+
     def needs_rewrite(self):
         if self.static_page and (self.last_qc_repeat_generated < len(
                 self.sessions)):
@@ -1420,6 +1427,11 @@ class Session(TableMixin, db.Model):
             db.session.rollback()
             return None
         return new_task
+
+    def expects_notes(self, study=None):
+        study = self.get_study(study)
+        study_site = study.sites[self.site.name]
+        return study_site.uses_notes
 
     def __repr__(self):
         return "<Session {}, {}>".format(self.name, self.num)
