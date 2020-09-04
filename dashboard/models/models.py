@@ -996,12 +996,6 @@ class Timepoint(TableMixin, db.Model):
                            db.Boolean,
                            nullable=False,
                            default=False)
-    # Delete these columns when the static QC pages are made obsolete
-    last_qc_repeat_generated = db.Column('last_qc_generated',
-                                         db.Integer,
-                                         nullable=False,
-                                         default=1)
-    static_page = db.Column('static_page', db.String(1028))
 
     site = db.relationship('Site', uselist=False, back_populates='timepoints')
     studies = db.relationship(
@@ -1762,6 +1756,12 @@ class Scan(TableMixin, db.Model):
             raise InvalidDataException("Failed to add conversion error "
                                        "message for {}. Reason: {}".format(
                                            self, e))
+
+    @property
+    def qc_type(self):
+        if self.session.timepoint.is_phantom:
+            return self.scantype.pha_type or self.scantype.qc_type
+        return self.scantype.qc_type
 
     def __repr__(self):
         if self.source_id:

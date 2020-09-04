@@ -99,9 +99,30 @@ def upgrade():
         ['study', 'site', 'scantype'],
     )
     op.drop_table('study_scantypes')
+    op.drop_column('timepoints', 'static_page')
+    op.drop_column('timepoints', 'last_qc_generated')
 
 
 def downgrade():
+    op.add_column(
+        'timepoints',
+        sa.Column(
+            'last_qc_generated',
+            sa.INTEGER(),
+            server_default=sa.text('0'),
+            autoincrement=False,
+            nullable=False
+        )
+    )
+    op.add_column(
+        'timepoints',
+        sa.Column(
+            'static_page',
+            sa.VARCHAR(length=1028),
+            autoincrement=False,
+            nullable=True
+        )
+    )
     op.alter_column(
         'studies',
         'is_open',
