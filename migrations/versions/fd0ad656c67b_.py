@@ -68,7 +68,7 @@ def upgrade():
 
     op.add_column(
         'scans',
-        sa.Column('length', sa.Integer, nullable=True)
+        sa.Column('length', sa.String(10), nullable=True)
     )
     op.add_column(
         'study_sites',

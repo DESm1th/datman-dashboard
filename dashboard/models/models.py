@@ -1533,7 +1533,7 @@ class Scan(TableMixin, db.Model):
                     db.ForeignKey('scantypes.tag'),
                     nullable=False)
     description = db.Column('description', db.String(128))
-    length = db.Column('length', db.Integer, nullable=True)
+    length = db.Column('length', db.String(10), nullable=True)
     conv_errors = db.Column('conversion_errors', db.Text)
     json_path = db.Column('json_path', db.String(1028))
     json_contents = db.Column('json_contents', JSONB)
@@ -1729,6 +1729,19 @@ class Scan(TableMixin, db.Model):
         if not self.header_diffs:
             return {}
         return self.header_diffs[0].diffs
+
+    def is_outdated_header_diffs(self):
+        """Reports whether an update to the header diffs is needed.
+        """
+        if not self.gold_standards:
+            return False
+        if not self.json_contents:
+            return False
+        if not self.header_diffs:
+            return True
+        return (
+            self.header_diffs[0].gold_standard_id != self.gold_standards[0].id
+        )
 
     def add_json(self, json_file, timestamp=None):
         self.json_contents = utils.read_json(json_file)
