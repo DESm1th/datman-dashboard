@@ -423,20 +423,20 @@ def analysis(analysis_id=None):
 
 
 # These functions serve up static files from the local filesystem
-@main.route('/study/<string:study_id>/data/RESOURCES/<path:tech_notes_path>')
-@main.route('/study/<string:study_id>/qc/<string:timepoint_id>/index.html')
-@main.route('/study/<string:study_id>/qc/<string:timepoint_id>'
-           '/<regex(".*\.png"):image>')  # noqa: W605
-@login_required
-def static_qc_page(study_id,
-                   timepoint_id=None,
-                   image=None,
-                   tech_notes_path=None):
-    if tech_notes_path:
-        resources = get_study_path(study_id, 'resources')
-        return send_from_directory(resources, tech_notes_path)
-    timepoint = get_timepoint(study_id, timepoint_id, current_user)
-    if image:
-        qc_dir, _ = os.path.split(timepoint.static_page)
-        return send_from_directory(qc_dir, image)
-    return send_file(timepoint.static_page)
+# @main.route('/study/<string:study_id>/data/RESOURCES/<path:tech_notes_path>')
+# @main.route('/study/<string:study_id>/qc/<string:timepoint_id>/index.html')
+# @main.route('/study/<string:study_id>/qc/<string:timepoint_id>'
+#            '/<regex(".*\.png"):image>')  # noqa: W605
+# @login_required
+# def static_qc_page(study_id,
+#                    timepoint_id=None,
+#                    image=None,
+#                    tech_notes_path=None):
+#     if tech_notes_path:
+#         resources = get_study_path(study_id, 'resources')
+#         return send_from_directory(resources, tech_notes_path)
+#     timepoint = get_timepoint(study_id, timepoint_id, current_user)
+#     if image:
+#         qc_dir, _ = os.path.split(timepoint.static_page)
+#         return send_from_directory(qc_dir, image)
+#     return send_file(timepoint.static_page)

@@ -720,7 +720,6 @@ class Study(TableMixin, db.Model):
         # the other queries
         new_sessions = self.get_new_sessions().from_self(
             Session.name, Session.num).all()
-        need_rewrite = self.needs_rewrite()
         missing_redcap = self.get_missing_redcap()
         missing_scans = self.get_missing_scans()
 
@@ -730,11 +729,6 @@ class Study(TableMixin, db.Model):
                     '<span class="fa-layers-text fa-inverse" ' + \
                     'data-fa-transform="shrink-11.5 rotate--30" ' + \
                     'style="font-weight:900">NEW</span></span></td>'
-        rewrite_label = '<td class="col-xs-2"><span class="label ' + \
-                        'qc-warnings label-danger" title="Repeat session ' + \
-                        'not on QC page. Regenerate page by running ' + \
-                        'dm_qc_report.py with the --rewrite flag">Needs ' + \
-                        'Rewrite</span></td>'
         scans_label = '<td class="col-xs-2"><span class="label ' + \
                       'qc-warnings label-warning" title="Participant ' + \
                       'exists in REDCap but does not have scans">Missing ' + \
@@ -750,8 +744,6 @@ class Study(TableMixin, db.Model):
         default_row = ['<td></td>'] * 4
         for session in new_sessions:
             issues.setdefault(session[0], default_row[:])[0] = new_label
-        for session in need_rewrite:
-            issues.setdefault(session[0], default_row[:])[1] = rewrite_label
         for session in missing_scans:
             issues.setdefault(session[0], default_row[:])[2] = scans_label
         for session in missing_redcap:
@@ -826,35 +818,6 @@ class Study(TableMixin, db.Model):
                                   Session.name, Session.num)
         return sessions.all()
 
-    def needs_rewrite(self):
-        """
-        Return a list of (Session.name, Session.num) that aren't on their
-        timepoint's QC page (i.e. sessions that require the timepoint static
-        pages to be rewritten).
-        """
-        repeated = db.session.query(Session.name,
-                                    func.count(Session.name).label('num')) \
-                             .join(Timepoint) \
-                             .group_by(Session.name) \
-                             .having(func.count(Session.name) > 1).subquery()
-
-        need_rewrite = db.session.query(Session)\
-                                 .join(Timepoint)\
-                                 .join(study_timepoints_table,
-                                       and_(study_timepoints_table.c.timepoint
-                                            == Timepoint.name,
-                                            study_timepoints_table.c.study
-                                            == self.id))\
-                                 .join(repeated)\
-                                 .filter(Timepoint.static_page != None)\
-                                 .filter(Timepoint.last_qc_repeat_generated <
-                                         repeated.c.num) \
-                                 .filter(Session.num >
-                                         Timepoint.last_qc_repeat_generated) \
-                                 .from_self(Session.name, Session.num)
-
-        return need_rewrite.all()
-
     def get_blacklisted_scans(self):
         query = self._get_checklist()
         blacklisted_scans = query.filter(
@@ -875,6 +838,22 @@ class Study(TableMixin, db.Model):
             and_(ScanChecklist.approved == True,
                  ScanChecklist.comment == None))
         return reviewed_scans.all()
+
+    def get_tag_counts(self, site, pha=False):
+        """Return the number of scans expected for each tag.
+
+        Args:
+            site (str): The name of a site for this study.
+            pha (bool, optional): Whether to look up the number expected
+                for phantoms.
+        """
+        if not pha:
+            return {
+                item.scantype_id: item.count for item in self.scantypes[site]
+            }
+        return {
+            item.scantype_id: item.pha_count for item in self.scantypes[site]
+        }
 
     def _get_checklist(self):
         query = db.session.query(ScanChecklist) \
@@ -1014,11 +993,10 @@ class Timepoint(TableMixin, db.Model):
     incidental_findings = db.relationship('IncidentalFinding',
                                           cascade='all, delete')
 
-    def __init__(self, name, site, is_phantom=False, static_page=None):
+    def __init__(self, name, site, is_phantom=False):
         self.name = name
         self.site_id = site
         self.is_phantom = is_phantom
-        self.static_page = static_page
 
     def add_bids(self, name, session):
         self.bids_name = name
@@ -1137,12 +1115,6 @@ class Timepoint(TableMixin, db.Model):
         study = self.get_study(study)
         study_site = study.sites[self.site.name]
         return study_site.uses_notes
-
-    def needs_rewrite(self):
-        if self.static_page and (self.last_qc_repeat_generated < len(
-                self.sessions)):
-            return True
-        return False
 
     def missing_scans(self):
         if self.is_phantom:
@@ -1426,6 +1398,10 @@ class Session(TableMixin, db.Model):
         study = self.get_study(study)
         study_site = study.sites[self.site.name]
         return study_site.uses_notes
+
+    def get_expected_scans(self, study_id=None):
+        study = self.get_study(study_id)
+        return study.get_tag_counts(self.site.name, self.timepoint.is_phantom)
 
     def __repr__(self):
         return "<Session {}, {}>".format(self.name, self.num)
