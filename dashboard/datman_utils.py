@@ -17,6 +17,7 @@ import os
 import shutil
 import glob
 import logging
+import json
 
 import datman.config
 import datman.scanid
@@ -187,3 +188,29 @@ def update_header_diffs(scan):
 
     scan.update_header_diffs(ignore=ignore,
                              tolerance=tolerance)
+
+
+def get_manifests(timepoint):
+    study = timepoint.get_study().id
+    config = datman.config.config(study=study)
+    try:
+        qc_dir = config.get_path("qc")
+    except:
+        logger.error("No QC path defined for study {}".format(study))
+        return {}
+
+    qc_path = os.path.join(qc_dir, str(timepoint))
+    found = {}
+    for manifest in glob.glob(qc_path, "*_manifest.json"):
+        with open(manifest, "r") as in_file:
+            try:
+                contents = json.load(in_file)
+            except Exception as e:
+                # Maybe add an error message json in place of the manifest
+                logger.error("Unreadable manifest file found {} - {}".format(
+                    contents, e
+                ))
+                continue
+            scan_name = os.path.basename(manifest).replace("_manifest.json", "")
+            found[scan_name] = sorted(contents, key=lambda x: x['order'])
+    return found

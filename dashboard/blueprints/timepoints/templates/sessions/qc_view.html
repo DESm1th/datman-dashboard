@@ -1,0 +1,15 @@
+{% for scan_name in manifests %}
+  <div>
+    <h3>{{ scan_name }}</h3>
+    {% for image in entry[scan_name] %}
+      {% set settings = entry[scan_name][image] %}
+      {% if settings['title'] %}
+        <h4>{{ settings['title'] }}</h4>
+      {% endif %}
+      {% if settings['caption'] %}
+        <div>{{ settings['caption'] }}</div>
+      {% endif %}
+      <img src={{ url_for(main.qc_files, study_id=study_id, timepoint_id=timepoint.name, item=image) }}>
+    {% endfor %}
+  </div>
+{% endfor %}

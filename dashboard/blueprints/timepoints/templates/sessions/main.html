@@ -36,6 +36,7 @@
 
     {% if session.scans|count %}
       {% include 'sessions/scan_table.html' %}
+      {% include 'sessions/qc_view.html' %}
     {% elif session.empty_session %}
       {% include 'sessions/empty_session.html' %}
     {% endif %}

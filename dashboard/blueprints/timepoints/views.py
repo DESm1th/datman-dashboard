@@ -39,6 +39,7 @@ def timepoint(study_id, timepoint_id):
                          "access denied.".format(current_user))
             github_issues = None
 
+    manifests = dm_utils.get_manifests(timepoint)
     empty_form = EmptySessionForm()
     findings_form = IncidentalFindingsForm()
     comments_form = TimepointCommentsForm()
@@ -48,6 +49,7 @@ def timepoint(study_id, timepoint_id):
     return render_template('main.html',
                            study_id=study_id,
                            timepoint=timepoint,
+                           manifests=manifests,
                            empty_session_form=empty_form,
                            incidental_findings_form=findings_form,
                            timepoint_comments_form=comments_form,
