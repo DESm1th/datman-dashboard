@@ -37,7 +37,7 @@
     {% if session.scans|count %}
       {% include 'sessions/scan_table.html' %}
       {% if session.tech_notes %}
-        <a href="{{ url_for('main.tech_notes', study_id, session.tech_notes) }}"
+        <a href="{{ url_for('tech_notes', study_id, session.tech_notes) }}"
            class="btn btn-primary pull-right"
            id="doc-page"
            target="_blank">
