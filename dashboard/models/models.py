@@ -37,7 +37,7 @@ class TableMixin:
         except Exception as e:
             db.session.rollback()
             raise InvalidDataException("Failed to commit to database. Reason "
-                                       f"- {e}")
+                                       "- {}".format(e))
 
     def delete(self):
         db.session.delete(self)
@@ -46,7 +46,7 @@ class TableMixin:
         except Exception as e:
             db.session.rollback()
             raise InvalidDataException("Failed to delete from database. "
-                                       f"Reason - {e}")
+                                       "Reason - {}".format(e))
 
 
 ###############################################################################
@@ -565,13 +565,15 @@ class Study(TableMixin, db.Model):
                 )
             else:
                 raise InvalidDataException(
-                    f"Failed to add gold standard {gs_file}. Reason - {e}"
+                    "Failed to add gold standard {}. Reason - "
+                    "{}".format(gs_file, e)
                 )
         return new_gs
 
     def delete_scantype(self, site_id, scantype):
         if site_id not in self.sites:
-            raise InvalidDataException(f"Invalid site {site_id} for {self.id}")
+            raise InvalidDataException("Invalid site {} for "
+                                       "{}".format(site_id, self.id))
 
         found = [entry for entry in self.scantypes[site_id]
                  if entry.scantype_id == scantype]
@@ -615,14 +617,15 @@ class Study(TableMixin, db.Model):
             site_id = Site.id
         elif not Site.query.get(site_id):
             if not create:
-                raise InvalidDataException(f"Site {site_id} does not exist.")
+                raise InvalidDataException("Site {} does not exist.".format(
+                    site_id))
             site = Site(site_id)
             db.session.add(site)
 
         if site_id not in self.sites:
             if not create:
-                raise InvalidDataException(f"Invalid site {site_id} for study "
-                                           f"{self.id}")
+                raise InvalidDataException("Invalid site {} for study "
+                                           "{}".format(site_id, self.id))
             study_site = StudySite(self.id, site_id)
         else:
             study_site = self.sites[site_id]
@@ -641,8 +644,9 @@ class Study(TableMixin, db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise InvalidDataException(f"Failed to update site {site_id} for "
-                                       f"study {self.id}. Reason - {e}")
+            raise InvalidDataException("Failed to update site {} for study "
+                                       "{}. Reason - {}".format(
+                                            site_id, self.id, e))
 
     def update_scantype(self, site_id, scantype, num=None, pha_num=None,
                         create=False):
@@ -669,12 +673,14 @@ class Study(TableMixin, db.Model):
             site_id = site_id.id
 
         if site_id not in self.sites:
-            raise InvalidDataException(f"Invalid site {site_id} for {self.id}")
+            raise InvalidDataException("Invalid site {} for {}".format(
+                site_id, self.id))
 
         if not isinstance(scantype, Scantype):
             found = Scantype.query.get(scantype)
             if not found:
-                raise InvalidDataException(f"Undefined scan type {scantype}.")
+                raise InvalidDataException("Undefined scan type "
+                                           "{}.".format(scantype))
             scantype = found
 
         expected = ExpectedScan.query.get((self.id, site_id, scantype.tag))
@@ -688,8 +694,8 @@ class Study(TableMixin, db.Model):
                                     pha_num)
         else:
             raise InvalidDataException(
-                f"Tag {scantype.tag} not accepted for study {self.id} "
-                f"and site {site_id} combination."
+                "Tag {} not accepted for study {} and site {} combination."
+                "".format(scantype.tag, self.id, site_id)
             )
 
         db.session.add(expected)
@@ -697,8 +703,8 @@ class Study(TableMixin, db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise InvalidDataException(f"Failed to update expected scans for "
-                                       f"{self.id}. Reason - {e}")
+            raise InvalidDataException("Failed to update expected scans for "
+                                       "{}. Reason - {}".format(self.id, e))
 
     def num_timepoints(self, type=''):
         if type.lower() == 'human':
