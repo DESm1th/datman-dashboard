@@ -195,7 +195,7 @@ def get_manifests(timepoint):
     config = datman.config.config(study=study)
     try:
         qc_dir = config.get_path("qc")
-    except:
+    except Exception:
         logger.error("No QC path defined for study {}".format(study))
         return {}
 
@@ -211,6 +211,9 @@ def get_manifests(timepoint):
                     contents, e
                 ))
                 continue
-            scan_name = os.path.basename(manifest).replace("_manifest.json", "")
+            scan_name = os.path.basename(manifest).replace(
+                "_manifest.json",
+                ""
+            )
             found[scan_name] = sorted(contents, key=lambda x: x['order'])
     return found

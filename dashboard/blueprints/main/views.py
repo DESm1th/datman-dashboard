@@ -6,8 +6,7 @@ import logging
 
 from flask import session as flask_session
 from flask import (current_app, render_template, flash, url_for, redirect,
-                   request, jsonify, make_response, send_file,
-                   send_from_directory)
+                   request, jsonify, make_response, send_from_directory)
 from flask_login import current_user, login_required
 
 from dashboard import db
@@ -423,20 +422,16 @@ def analysis(analysis_id=None):
 
 
 # These functions serve up static files from the local filesystem
-# @main.route('/study/<string:study_id>/data/RESOURCES/<path:tech_notes_path>')
-# @main.route('/study/<string:study_id>/qc/<string:timepoint_id>/index.html')
-# @main.route('/study/<string:study_id>/qc/<string:timepoint_id>'
-#            '/<regex(".*\.png"):image>')  # noqa: W605
-# @login_required
-# def static_qc_page(study_id,
-#                    timepoint_id=None,
-#                    image=None,
-#                    tech_notes_path=None):
-#     if tech_notes_path:
-#         resources = get_study_path(study_id, 'resources')
-#         return send_from_directory(resources, tech_notes_path)
-#     timepoint = get_timepoint(study_id, timepoint_id, current_user)
-#     if image:
-#         qc_dir, _ = os.path.split(timepoint.static_page)
-#         return send_from_directory(qc_dir, image)
-#     return send_file(timepoint.static_page)
+@main.route('/study/<string:study_id>/qc/<string:timepoint_id>/'
+            '<string:item_path>')
+@login_required
+def qc_files(study_id, timepoint_id, item_path):
+    qc_folder = os.path.join(get_study_path(study_id, 'qc'), timepoint_id)
+    return send_from_directory(qc_folder, item_path)
+
+
+@main.route('/study/<string:study_id>/data/RESOURCES/<path:notes_path>')
+@login_required
+def tech_notes(study_id, notes_path):
+    resources_folder = get_study_path(study_id, 'resources')
+    return send_from_directory(resources_folder, notes_path)
