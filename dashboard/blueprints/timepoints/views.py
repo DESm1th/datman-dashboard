@@ -267,18 +267,16 @@ def create_issue(study_id, timepoint_id):
 
     return redirect(dest_URL)
 
-
 # These functions serve up static files from the local filesystem
-@time_bp.route('/study/<string:study_id>/qc/<string:timepoint_id>/'
-            '<string:item_path>')
+@time_bp.route('/qc/<string:item_path>')
 @login_required
 def qc_files(study_id, timepoint_id, item_path):
     qc_folder = os.path.join(get_study_path(study_id, 'qc'), timepoint_id)
     return send_from_directory(qc_folder, item_path)
 
 
-@time_bp.route('/study/<string:study_id>/data/RESOURCES/<path:notes_path>')
+@time_bp.route('/RESOURCES/<path:notes_path>')
 @login_required
-def tech_notes(study_id, notes_path):
+def tech_notes(study_id, _, notes_path):
     resources_folder = get_study_path(study_id, 'resources')
     return send_from_directory(resources_folder, notes_path)
