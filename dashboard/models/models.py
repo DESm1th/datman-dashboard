@@ -645,8 +645,9 @@ class Study(TableMixin, db.Model):
         except Exception as e:
             db.session.rollback()
             raise InvalidDataException("Failed to update site {} for study "
-                                       "{}. Reason - {}".format(
-                                            site_id, self.id, e))
+                                       "{}. Reason - {}".format(site_id,
+                                                                self.id,
+                                                                e))
 
     def update_scantype(self, site_id, scantype, num=None, pha_num=None,
                         create=False):

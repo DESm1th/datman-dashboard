@@ -1,12 +1,11 @@
 import json
 import csv
 import io
-import os
 import logging
 
 from flask import session as flask_session
 from flask import (current_app, render_template, flash, url_for, redirect,
-                   request, jsonify, make_response, send_from_directory)
+                   request, jsonify, make_response, send_file)
 from flask_login import current_user, login_required
 
 from dashboard import db
@@ -16,8 +15,6 @@ from ...queries import (query_metric_values_byid, query_metric_types,
                         find_sessions, find_scans)
 from ...models import Study, Site, Timepoint, Analysis
 from ...forms import (SelectMetricsForm, StudyOverviewForm, AnalysisForm)
-from ...utils import get_timepoint
-from ...datman_utils import get_study_path
 
 logger = logging.getLogger(__name__)
 
