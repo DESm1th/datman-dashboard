@@ -9,7 +9,7 @@
       {% if settings['caption'] %}
         <div>{{ settings['caption'] }}</div>
       {% endif %}
-      <img src={{ url_for(qc_files, study_id=study_id, timepoint_id=timepoint.name, item=image) }}>
+      <img src={{ url_for("timepoints.qc_files", study_id=study_id, timepoint_id=timepoint.name, item_path=image) }}>
     {% endfor %}
   </div>
 {% endfor %}
