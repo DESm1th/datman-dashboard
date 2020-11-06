@@ -1,15 +1,13 @@
-{% for scan_name in manifests %}
-  <div>
-    <h3>{{ scan_name }}</h3>
-    {% for image in manifests[scan_name] %}
-      {% set settings = manifests[scan_name][image] %}
-      {% if settings['title'] %}
-        <h4>{{ settings['title'] }}</h4>
-      {% endif %}
-      {% if settings['caption'] %}
-        <div>{{ settings['caption'] }}</div>
-      {% endif %}
-      <img src={{ url_for("timepoints.qc_files", study_id=study_id, timepoint_id=timepoint.name, item_path=image) }}>
-    {% endfor %}
-  </div>
+{% for scan_name, contents in manifests %}
+  <h3>{{ scan_name }}</h3>
+  {% for image in contents %}
+    {% set settings = contents[image] %}
+    {% if settings['title'] %}
+      <h4>{{ settings['title'] }}</h4>
+    {% endif %}
+    {% if settings['caption'] %}
+      <div>{{ settings['caption'] }}</div>
+    {% endif %}
+    <img width=100% src={{ url_for("timepoints.qc_files", study_id=study_id, timepoint_id=timepoint.name, item_path=image) }}>
+  {% endfor %}
 {% endfor %}

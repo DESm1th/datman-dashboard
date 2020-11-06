@@ -200,8 +200,9 @@ def get_manifests(timepoint):
         return {}
 
     qc_path = os.path.join(qc_dir, str(timepoint))
-    found = {}
-    for manifest in glob.glob(os.path.join(qc_path, "*_manifest.json")):
+    found = []
+    manifests = glob.glob(os.path.join(qc_path, "*_manifest.json"))
+    for manifest in sorted(manifests, key=lambda x: datman.scanid.parse_filename(x)[2]):
         with open(manifest, "r") as in_file:
             try:
                 contents = json.load(in_file)
@@ -215,5 +216,5 @@ def get_manifests(timepoint):
                 "_manifest.json",
                 ""
             )
-            found[scan_name] = contents
+            found.append((scan_name, contents))
     return found
