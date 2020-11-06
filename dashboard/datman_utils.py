@@ -200,21 +200,28 @@ def get_manifests(timepoint):
         return {}
 
     qc_path = os.path.join(qc_dir, str(timepoint))
-    found = []
-    manifests = glob.glob(os.path.join(qc_path, "*_manifest.json"))
-    for manifest in sorted(manifests, key=lambda x: datman.scanid.parse_filename(x)[2]):
-        with open(manifest, "r") as in_file:
-            try:
-                contents = json.load(in_file)
-            except Exception as e:
-                # Maybe add an error message json in place of the manifest
-                logger.error("Unreadable manifest file found {} - {}".format(
-                    contents, e
-                ))
-                continue
+    found = {}
+    for num in timepoint.sessions:
+        session = timepoint.sessions[num]
+        found[num] = []
+
+        manifests = sorted(
+            glob.glob(os.path.join(qc_path, f"{session}_*_manifest.json")),
+            key=lambda x: datman.scanid.parse_filename(x)[2]
+        )
+        for manifest in manifests:
+            with open(manifest, "r") as in_file:
+                try:
+                    contents = json.load(in_file)
+                except Exception as e:
+                    # Maybe add an error message json in place of the manifest
+                    logger.error("Unreadable manifest file found {} - {}".format(
+                        contents, e
+                        ))
+                    continue
             scan_name = os.path.basename(manifest).replace(
                 "_manifest.json",
                 ""
             )
-            found.append((scan_name, contents))
+            found[num].append((scan_name, contents))
     return found

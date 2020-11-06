@@ -1,4 +1,4 @@
-{% for scan_name, contents in manifests %}
+{% for scan_name, contents in manifests[session.num] %}
   <h3>{{ scan_name }}</h3>
   {% for image in contents %}
     {% set settings = contents[image] %}
