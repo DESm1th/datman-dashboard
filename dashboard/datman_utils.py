@@ -18,6 +18,7 @@ import shutil
 import glob
 import logging
 import json
+from collections import OrderedDict
 
 import datman.config
 import datman.scanid
@@ -191,6 +192,22 @@ def update_header_diffs(scan):
 
 
 def get_manifests(timepoint):
+    """Collects and organizes all manifest files for a timepoint.
+
+    Args:
+        timepoint (:obj:`dashboard.models.Timepoint`): A timepoint from the
+            database.
+
+    Returns:
+        A dictionary mapping session numbers to a list of tuples containing
+        the name of each input nifti file and its manifest file contents.
+
+        For example:
+        {
+            1: [(nifti_1, nifti_1_manifest), (nifti_2, nifti_2_manifest)],
+            2: [(nifti_3, nifti_3_manifest)]
+         }
+    """
     study = timepoint.get_study().id
     config = datman.config.config(study=study)
     try:
@@ -223,5 +240,11 @@ def get_manifests(timepoint):
                 "_manifest.json",
                 ""
             )
-            found[num].append((scan_name, contents))
+
+            # Needed to ensure ordering respected
+            ordered_contents = OrderedDict(
+                sorted(contents.items(), key=lambda x: x[1].get('order', 999))
+            )
+
+            found[num].append((scan_name, ordered_contents))
     return found
