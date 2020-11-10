@@ -282,6 +282,7 @@ def qc_files(study_id, timepoint_id, item_path):
 
 @time_bp.route('/RESOURCES/<path:notes_path>')
 @login_required
-def tech_notes(study_id, _, notes_path):
+def tech_notes(study_id, timepoint_id, notes_path):
+    # timepoint_id only included because of the url_prefix
     resources_folder = dm_utils.get_study_path(study_id, 'resources')
     return send_from_directory(resources_folder, notes_path)
