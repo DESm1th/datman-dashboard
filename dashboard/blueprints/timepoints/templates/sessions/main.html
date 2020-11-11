@@ -34,15 +34,17 @@
       {% include 'sessions/redcap_report.html' %}
     {% endif %}
 
-    {% if session.tech_notes %}
-      <a href="{{ url_for('timepoints.tech_notes', study_id=study_id, timepoint_id=session.name, notes_path=session.tech_notes) }}"
-         class="btn btn-primary pull-right"
-         id="doc-page"
-         target="_blank">
-            <span class="button-text">View Tech Notes</span>
-            <span class="glyphicon glyphicon-share-alt"></span>
-      </a>
-    {% endif %}
+    <span class="session-files">
+      {% if session.tech_notes %}
+        <a href="{{ url_for('timepoints.tech_notes', study_id=study_id, timepoint_id=session.name, notes_path=session.tech_notes) }}"
+           class="btn btn-primary pull-right"
+           id="tech-notes-btn"
+           target="_blank">
+              <span class="button-text">View Tech Notes</span>
+              <span class="glyphicon glyphicon-share-alt"></span>
+        </a>
+      {% endif %}
+    </span>
 
     {% if session.scans|count %}
       {% include 'sessions/scan_table.html' %}

@@ -291,6 +291,11 @@ thead {
   font-size: 0.8em;
 }
 
+.session-files {
+  display: inline-block;
+  width: 100%;
+}
+
 .scan-table {
   margin: 10px 0;
 }
