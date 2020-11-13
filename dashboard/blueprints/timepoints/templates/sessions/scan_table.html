@@ -19,11 +19,11 @@
           <td class="scan_type"> {{ scan.tag }}</td>
           <td class="scan_length"> {{ scan.length }}</td>
           <td class="scan_desc">
-            <!-- Will have to change this part to instead anchor to images...  -->
-            <a href="{{ url_for('scans.scan', study_id=study_id, scan_id=scan.id ) }}">
+            <a href="#{{ scan.name }}">
               {{ scan.description }}
             </a>
             {% if scan.source_id %}
+<!--             Must ensure scan viewer move to timepoint page takes source data into account                  -->
               <a href="{{ url_for('scans.scan', study_id=scan.source_data.get_study().id, scan_id=scan.source_id) }}">
                 <span class="badge" title="Click to visit source scan">
                   linked scan
