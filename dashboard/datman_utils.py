@@ -199,13 +199,14 @@ def get_manifests(timepoint):
             database.
 
     Returns:
-        A dictionary mapping session numbers to a list of tuples containing
-        the name of each input nifti file and its manifest file contents.
+        A dictionary mapping session numbers to a dictionary of input nifti
+        files and their manifest contents.
 
         For example:
         {
-            1: [(nifti_1, nifti_1_manifest), (nifti_2, nifti_2_manifest)],
-            2: [(nifti_3, nifti_3_manifest)]
+            1: {nifti_1: nifti_1_manifest,
+                nifti_2: nifti_2_manifest},
+            2: {nifti_3: nifti_3_manifest}
          }
     """
     study = timepoint.get_study().id
@@ -220,24 +221,28 @@ def get_manifests(timepoint):
     found = {}
     for num in timepoint.sessions:
         session = timepoint.sessions[num]
-        found[num] = []
+        found[num] = {}
 
-        manifests = sorted(
-            glob.glob(os.path.join(qc_path, f"{session}_*_manifest.json")),
-            key=lambda x: datman.scanid.parse_filename(x)[2]
+        manifests = glob.glob(
+            os.path.join(qc_path, f"{session}_*_manifest.json")
         )
+
         for manifest in manifests:
             with open(manifest, "r") as in_file:
                 try:
                     contents = json.load(in_file)
                 except Exception as e:
                     # Maybe add an error message json in place of the manifest
-                    logger.error("Unreadable manifest file found {} - {}".format(
-                        contents, e
-                        ))
+                    logger.error(
+                        "Unreadable manifest file found {} - {}".format(
+                            contents, e
+                        )
+                    )
                     continue
+
+            _, _, _, description = datman.scanid.parse_filename(manifest)
             scan_name = os.path.basename(manifest).replace(
-                "_manifest.json",
+                f"{description}.json",
                 ""
             )
 
@@ -246,5 +251,6 @@ def get_manifests(timepoint):
                 sorted(contents.items(), key=lambda x: x[1].get('order', 999))
             )
 
-            found[num].append((scan_name, ordered_contents))
+            found[num][scan_name] = ordered_contents
+
     return found
