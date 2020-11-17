@@ -244,7 +244,7 @@ def get_manifests(timepoint):
             scan_name = os.path.basename(manifest).replace(
                 f"{description}.json",
                 ""
-            )
+            ).strip("_")
 
             # Needed to ensure ordering respected
             ordered_contents = OrderedDict(
