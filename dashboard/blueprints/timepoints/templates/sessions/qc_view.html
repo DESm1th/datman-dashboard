@@ -1,5 +1,5 @@
 {% for scan in session.scans %}
-  {% if scan.name not manifests[session.num] %}
+  {% if scan.name in manifests[session.num] %}
     <h3 id="{{scan_name}}">{{ scan_name }}</h3>
     {% for image in contents %}
       {% set settings = contents[image] %}
