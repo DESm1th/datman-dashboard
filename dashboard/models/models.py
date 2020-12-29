@@ -1602,6 +1602,7 @@ class Scan(TableMixin, db.Model):
             checklist = self._new_checklist_entry(signing_user)
         checklist.update_entry(signing_user, comment, sign_off)
         checklist.save()
+        return checklist
 
     def is_linked(self):
         return self.source_id is not None

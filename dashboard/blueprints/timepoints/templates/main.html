@@ -1,6 +1,14 @@
 <!-- Overview of a single timepoint's data -->
 {% extends "base.html" %}
 {% include "flash.html" %}
+
+{% block header_scripts %}
+
+{{ super() }}
+
+
+{% endblock %}
+
 {% block content %}
 <div class="container">
 
@@ -56,6 +64,8 @@
   {% include 'modals/incidental_findings.html' %}
   {% include 'modals/delete_data.html' %}
   {% include 'modals/new_issue.html' %}
+  {% include 'modals/review_scan.html' %}
 
 </div>
+
 {% endblock %}
