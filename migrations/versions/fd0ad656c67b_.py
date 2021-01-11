@@ -5,7 +5,7 @@ This adds a few columns to track the 'USES_TECHNOTES', 'Count', 'PHACount',
 study_scantypes table with an 'expected_scans' table.
 
 Revision ID: fd0ad656c67b
-Revises: c5d321b34b54
+Revises: 4a842feae63a
 Create Date: 2020-05-20 15:46:40.340882
 
 """
@@ -15,7 +15,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'fd0ad656c67b'
-down_revision = '442e3abe5587'
+down_revision = '4a842feae63a'
 branch_labels = None
 depends_on = None
 
