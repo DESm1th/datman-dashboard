@@ -7,7 +7,7 @@ from sqlalchemy import and_, or_, func
 from dashboard import db
 from .models import (Timepoint, Session, Scan, Study, Site, Metrictype,
                      MetricValue, Scantype, StudySite, AltStudyCode, User,
-                     study_timepoints_table)
+                     study_timepoints_table, RedcapConfig)
 import datman.scanid as scanid
 
 logger = logging.getLogger(__name__)
@@ -273,6 +273,12 @@ def get_scantypes(tag_id=None, create=False):
         raise e
 
     return [new_tag]
+
+
+def find_redcap_config(project, instrument, url):
+    return RedcapConfig.get_config(
+        project=project, instrument=instrument, url=url
+    )
 
 
 def query_metric_values_byid(**kwargs):
