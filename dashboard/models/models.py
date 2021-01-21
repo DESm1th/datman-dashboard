@@ -1986,7 +1986,7 @@ class RedcapRecord(db.Model):
         return "<RedcapRecord {}: record {}>".format(self.id, self.record)
 
 
-class RedcapConfig(db.Model):
+class RedcapConfig(TableMixin, db.Model):
     __tablename__ = "redcap_config"
 
     id = db.Column(db.Integer, primary_key=True)
