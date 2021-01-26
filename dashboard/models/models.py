@@ -2041,6 +2041,7 @@ class RedcapConfig(TableMixin, db.Model):
 
         cfg = RedcapConfig(project, instrument, url, version=version)
         cfg.save()
+        return cfg
 
     def __repr__(self):
         return "<RedcapConfig {}>".format(self.id)
