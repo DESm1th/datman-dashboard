@@ -2001,7 +2001,7 @@ class RedcapConfig(TableMixin, db.Model):
     user_id_field = db.Column('user_id_field', db.String(128))
     session_id_field = db.Column('session_id_field', db.String(128))
     completed_field = db.Column('completed_form_field', db.String(128))
-    completed_value = db.Column('completed_value', db.String(10))
+    _completed_value = db.Column('completed_value', db.String(10))
 
     token = db.Column('token', db.String(64))
 
@@ -2012,6 +2012,16 @@ class RedcapConfig(TableMixin, db.Model):
         self.instrument = instrument
         self.url = url
         self.redcap_version = version
+
+    @property
+    def completed_value(self):
+        return self._completed_value.split(",")
+
+    @completed_value.setter
+    def completed_value(self, user_value):
+        if '__iter__' not in dir(user_value):
+            user_value = [user_value]
+        self._completed_value = ",".join([str(item) for item in user_value])
 
     def get_config(config_id=None, project=None, instrument=None, url=None,
                    version=None, create=False):

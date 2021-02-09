@@ -18,17 +18,6 @@
     </a>
   </div>
 
-  <!-- Update references to
-      qc-display to qc-display-$id
-      comment-container (id) to qc-comment-container (class)
-      scan-qc-comment (id) to qc-scan-comment (class)
-      update-comment to update-comment-$id
-      qc-badge (id) to class
-      scan-qc-status to qc-status-$id
-      approved, flagged, blacklisted classes all prefixed with qc-
-      scan-qc-signature (id) deleted
-  -->
-
   <div id="qc-display-{{ scan.id }}"
        {% if scan.is_new() %} style="display: none;" {% endif%}>
     <div class="comment-display col-xs-9"
