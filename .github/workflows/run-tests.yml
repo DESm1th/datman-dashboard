@@ -1,0 +1,21 @@
+name: Run unit tests
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, edited]
+
+jobs:
+  docker:
+    timeout-minutes: 10
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Start up the dashboard
+        run: cd containers/devel && docker-compose up -d
+      - name: Drop into dashboard container
+        run: docker exec -it devel_app_1 /bin/bash
+      - name: Run tests
+        run: pytest tests/
+      - name: Stop containers
+        run: docker-compose -f down
