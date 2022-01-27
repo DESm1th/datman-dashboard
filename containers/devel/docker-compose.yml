@@ -1,12 +1,16 @@
 version: '3'
 services:
   app:
+    container_name: devel_dashboard
+    build:
+      context: ../../
+      dockerfile: containers/devel/Dockerfile
     env_file: dashboard.env
-    image: devel_dashboard:latest
     ports:
       - 5000:5000
     command: /entrypoint.sh
     volumes:
+      - ../../:/dashboard
       - ${DASH_ARCHIVE:-.:/archive}
       - ${DASH_CONFIG:-.:/config}
       - logs:/logs
