@@ -1,8 +1,10 @@
 name: Run unit tests
 
 on:
+  push:
+    branches: [workflows]
   pull_request:
-    branches: [master]
+    branches: [workflows]
     types: [opened, edited]
 
 jobs:
