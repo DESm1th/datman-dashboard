@@ -11,9 +11,10 @@ COPY containers/devel/entrypoint.sh /entrypoint.sh
 # Copy the requirements and set up the python env first so
 # that rebuilds are faster.
 COPY ./requirements.txt /
+
 RUN pip install --upgrade pip && \
     pip install -r /requirements.txt && \
-    pip install flask-debugtoolbar
+    pip install flask-debugtoolbar pytest sqlalchemy-utils
 
 ENV PATH="/dashboard:${PATH}"
 ENV PYTHONPATH="/dashboard:${PYTHONPATH}"
