@@ -53,7 +53,10 @@ jobs:
         with:
           restore-keys: dashboard-docker-cache-
       - name: Start up the dashboard
-        run: cd containers/devel && docker-compose start app
+        run: |
+            cd containers/devel &&
+            docker-compose build app &&
+            docker-compose up
       - name: Build docs
         run: cd docs && make html
       - name: Deploy docs
