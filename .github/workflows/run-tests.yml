@@ -17,6 +17,6 @@ jobs:
         run: cd containers/devel && docker-compose up -d
       - name: Run tests
         run: |
-          docker exec -it devel_dashboard /bin/bash pytest dashboard/tests
+          docker exec -t devel_dashboard pytest -v dashboard/tests
       - name: Stop containers
         run: docker-compose -f down
