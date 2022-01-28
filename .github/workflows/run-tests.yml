@@ -19,8 +19,8 @@ jobs:
         continue-on-error: true
         with:
           key: dashboard-docker-cache-{hash}
-          restore_keys: dashboard-docker-cache-
-      - run: docker-compose build
+          restore-keys: dashboard-docker-cache-
+      - run: cd containers/devel && docker-compose build
   test:
     needs: build
     runs-on: ubuntu-20.04
@@ -31,7 +31,7 @@ jobs:
         continue-on-error: true
         with:
           key: dashboard-docker-cache-{hash}
-          restore_keys: dashboard-docker-cache-
+          restore-keys: dashboard-docker-cache-
       - name: Start up the dashboard
         run: cd containers/devel && docker-compose up -d
       - name: Run tests
