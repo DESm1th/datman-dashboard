@@ -8,6 +8,7 @@ on:
     types: [opened, edited]
 
 jobs:
+
   build:
     runs-on: ubuntu-20.04
     steps:
@@ -21,6 +22,7 @@ jobs:
           key: dashboard-docker-cache-{hash}
           restore-keys: dashboard-docker-cache-
       - run: cd containers/devel && docker-compose build
+
   test:
     needs: build
     runs-on: ubuntu-20.04
@@ -30,7 +32,6 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
-          key: dashboard-docker-cache-{hash}
           restore-keys: dashboard-docker-cache-
       - name: Start up the dashboard
         run: cd containers/devel && docker-compose up -d
@@ -38,4 +39,5 @@ jobs:
         run: |
           docker exec -t devel_dashboard pytest -v dashboard/tests
       - name: Stop containers
+        if: always()
         run: docker-compose down
