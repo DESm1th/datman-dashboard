@@ -8,11 +8,30 @@ on:
     types: [opened, edited]
 
 jobs:
-  docker:
-    timeout-minutes: 10
+  build:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Pull pre-existing images
+        run: docker-compose pull
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+        with:
+          key: dashboard-docker-cache-{hash}
+          restore_keys: dashboard-docker-cache-
+      - run: docker-compose build
+  test:
+    needs: build
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    steps:
       - uses: actions/checkout@v2
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+        with:
+          key: dashboard-docker-cache-{hash}
+          restore_keys: dashboard-docker-cache-
       - name: Start up the dashboard
         run: cd containers/devel && docker-compose up -d
       - name: Run tests
