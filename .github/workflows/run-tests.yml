@@ -1,4 +1,4 @@
-name: Build, test and update docs
+name: Run tests and update docs
 
 on:
   push:
@@ -23,24 +23,24 @@ jobs:
           restore-keys: dashboard-docker-cache-
       - run: cd containers/devel && docker-compose build
 
-  test:
-    needs: build
-    runs-on: ubuntu-20.04
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v2
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          restore-keys: dashboard-docker-cache-
-      - name: Start up the dashboard
-        run: cd containers/devel && docker-compose up -d
-      - name: Run tests
-        run: |
-          docker exec -t devel_dashboard pytest -v dashboard/tests
-      - name: Stop containers
-        if: always()
-        run: cd containers/devel && docker-compose down
+  # test:
+  #   needs: build
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 10
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: satackey/action-docker-layer-caching@v0.0.11
+  #       continue-on-error: true
+  #       with:
+  #         restore-keys: dashboard-docker-cache-
+  #     - name: Start up the dashboard
+  #       run: cd containers/devel && docker-compose up -d
+  #     - name: Run tests
+  #       run: |
+  #         docker exec -t devel_dashboard pytest -v dashboard/tests
+  #     - name: Stop containers
+  #       if: always()
+  #       run: cd containers/devel && docker-compose down
 
   make-docs:
     needs: build
@@ -53,10 +53,7 @@ jobs:
         with:
           restore-keys: dashboard-docker-cache-
       - name: Start up the dashboard
-        run: |
-            cd containers/devel &&
-            docker-compose build app &&
-            docker-compose start app -d
+        run: cd containers/devel && docker-compose up -d
       - name: Build docs
         run: docker exec -t devel_dashboard "cd docs && make html"
       - name: Deploy docs
