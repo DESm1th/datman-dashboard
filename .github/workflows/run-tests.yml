@@ -55,7 +55,9 @@ jobs:
       # - name: Check import works
       #   run: docker exec -t devel_dashboard /bin/bash -c "python -c 'import dashboard; print(dir(dashboard))'"
       - name: Build docs
-        run: docker exec -t devel_dashboard /bin/bash -c "cd dashboard/docs && make html"
+        run: docker exec -t devel_dashboard /bin/bash -c "cd dashboard/docs && make -vvvv -a -T html"
+      - name: Confirm docs build
+        run: docker exec -t devel_dashboard /bin/bash -c "ls -l && ls -l _build/"
       # - name: Deploy docs
       #   uses: JamesIves/github-pages-deploy-action@v4.2.2
       #   with:
