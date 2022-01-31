@@ -43,7 +43,7 @@ jobs:
   #       run: cd containers/devel && docker-compose down
 
   make-docs:
-    needs: build
+    # needs: build
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     steps:
