@@ -9,19 +9,19 @@ on:
 
 jobs:
 
-  build:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Pull pre-existing images
-        run: cd containers/devel && docker-compose pull
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: dashboard-docker-cache-{hash}
-          restore-keys: dashboard-docker-cache-
-      - run: cd containers/devel && docker-compose build
+  # build:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Pull pre-existing images
+  #       run: cd containers/devel && docker-compose pull
+  #     - uses: satackey/action-docker-layer-caching@v0.0.11
+  #       continue-on-error: true
+  #       with:
+  #         key: dashboard-docker-cache-{hash}
+  #         restore-keys: dashboard-docker-cache-
+  #     - run: cd containers/devel && docker-compose build
 
   # test:
   #   needs: build
@@ -48,19 +48,19 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          restore-keys: dashboard-docker-cache-
       - name: Start up the dashboard
         run: cd containers/devel && docker-compose up -d
-      - name: Build docs
-        run: docker exec -t devel_dashboard /bin/bash -c "cd dashboard/docs && make html"
-      - name: Deploy docs
-        uses: JamesIves/github-pages-deploy-action@v4.2.2
-        with:
-          branch: gh-pages
-          folder: docs/html
+      - name: Check paths
+        run: docker exec -t devel_dashboard /bin/bash -c "pwd && ls -l"
+      - name: Check import works
+        run: docker exec -t devel_dashboard /bin/bash -c "python -c 'import dashboard; print(dir(dashboard))'"
+      # - name: Build docs
+      #   run: docker exec -t devel_dashboard /bin/bash -c "cd dashboard/docs && make html"
+      # - name: Deploy docs
+      #   uses: JamesIves/github-pages-deploy-action@v4.2.2
+      #   with:
+      #     branch: gh-pages
+      #     folder: docs/html
       - name: Stop containers
         if: always()
         run: cd containers/devel && docker-compose down
