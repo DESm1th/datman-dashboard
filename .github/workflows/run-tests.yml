@@ -50,12 +50,12 @@ jobs:
       - uses: actions/checkout@v2
       - name: Start up the dashboard
         run: cd containers/devel && docker-compose up -d
-      - name: Check paths
-        run: docker exec -t devel_dashboard /bin/bash -c "pwd && ls -l"
-      - name: Check import works
-        run: docker exec -t devel_dashboard /bin/bash -c "python -c 'import dashboard; print(dir(dashboard))'"
-      # - name: Build docs
-      #   run: docker exec -t devel_dashboard /bin/bash -c "cd dashboard/docs && make html"
+      # - name: Check paths
+      #   run: docker exec -t devel_dashboard /bin/bash -c "pwd && ls -l"
+      # - name: Check import works
+      #   run: docker exec -t devel_dashboard /bin/bash -c "python -c 'import dashboard; print(dir(dashboard))'"
+      - name: Build docs
+        run: docker exec -t devel_dashboard /bin/bash -c "cd dashboard/docs && make html"
       # - name: Deploy docs
       #   uses: JamesIves/github-pages-deploy-action@v4.2.2
       #   with:
