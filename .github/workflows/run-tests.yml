@@ -57,7 +57,7 @@ jobs:
       - name: Check the build folder contents in container
         run: docker exec -t devel_dashboard /bin/bash -c "ls -l dashboard/docs/"
       - name: Check the build folder in outside of the compose container
-        run: ls -l /dashboard/docs/
+        run: pwd && ls -l
       # - name: Add .nojekyll file to build folder
       #   run: touch /dashboard/docs/_build/.nojekyll
       # - name: Deploy docs
