@@ -62,6 +62,8 @@ jobs:
       #   run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
       # - name: Confirm docs build
       #   run: docker exec -t devel_dashboard /bin/bash -c "ls -l /dashboard/docs/_build/"
+      - name: Add .nojekyll file to build folder
+        run: touch /dashboard/docs/_build/.nojekyll
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
