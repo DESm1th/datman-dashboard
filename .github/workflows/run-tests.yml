@@ -55,9 +55,13 @@ jobs:
       # - name: Check import works
       #   run: docker exec -t devel_dashboard /bin/bash -c "python -c 'import dashboard; print(dir(dashboard))'"
       - name: Build docs
-        run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build -vvvv -a -T dashboard/docs dashboard/docs/_build"
+        run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
+      - name: Repeat build to see if circular imports show again
+        run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
+      - name: And a third time
+        run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
       - name: Confirm docs build
-        run: docker exec -t devel_dashboard /bin/bash -c "ls -l && ls -l _build/"
+        run: docker exec -t devel_dashboard /bin/bash -c "ls -l /dashboard/docs/_build/"
       # - name: Deploy docs
       #   uses: JamesIves/github-pages-deploy-action@v4.2.2
       #   with:
