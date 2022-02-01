@@ -1,4 +1,4 @@
-name: Build docs and push to pages
+name: Run Tests
 
 on:
   push:
@@ -8,6 +8,18 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  test:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - name: Start up the dashboard
+        run: cd containers/devel && docker-compose up -d
+      - name: Run tests
+        run: docker exec -t devel_dashboard pytest -v dashboard/tests
+      - name: Stop containers
+        if: always()
+        run: cd containers/devel && docker-compose down
   build-docs:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
@@ -22,11 +34,11 @@ jobs:
       - name: Add .nojekyll file to build folder
         run: sudo touch docs/_build/.nojekyll
       - name: Deploy docs if the branch has updated
-        if: github.event == "push"
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
           branch: gh-pages
           folder: docs/_build
+        if: github.event_name == 'push'
       - name: Stop containers
         if: always()
         run: cd containers/devel && docker-compose down
