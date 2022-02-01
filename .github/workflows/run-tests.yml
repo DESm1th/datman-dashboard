@@ -54,10 +54,8 @@ jobs:
         run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
       - name: Repeat build in case non-deterministic build issue arose in last step
         run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
-      - name: Check the build folder contents in container
-        run: docker exec -t devel_dashboard /bin/bash -c "ls -l dashboard/docs/"
       - name: Add .nojekyll file to build folder
-        run: touch docs/_build/.nojekyll
+        run: sudo touch docs/_build/.nojekyll
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
