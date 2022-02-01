@@ -62,11 +62,13 @@ jobs:
       #   run: docker exec -t devel_dashboard /bin/bash -c "sphinx-build dashboard/docs dashboard/docs/_build"
       # - name: Confirm docs build
       #   run: docker exec -t devel_dashboard /bin/bash -c "ls -l /dashboard/docs/_build/"
-      - name: Deploy docs
-        uses: JamesIves/github-pages-deploy-action@v4.2.2
-        with:
-          branch: gh-pages
-          folder: docs/_build
+      # - name: Deploy docs
+      #   uses: JamesIves/github-pages-deploy-action@v4.2.2
+      #   with:
+      #     branch: gh-pages
+      #     folder: docs/_build
+      - name: Check the current branch and git status
+        run: git status && git branch -v
       - name: Stop containers
         if: always()
         run: cd containers/devel && docker-compose down
