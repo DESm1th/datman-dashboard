@@ -2,6 +2,12 @@
 Installation
 ------------
 
+
+This is just a temporary change to make sure the build and push 
+on PR works correctly
+
+
+
 You have several options for how to run the QC dashboard and these are
 listed below.
 

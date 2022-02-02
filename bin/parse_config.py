@@ -158,7 +158,7 @@ def update_study(study_id, config, skip_delete=False, delete_all=False):
     """
 
     raise Exception
-
+    
     try:
         config.set_study(study_id)
     except Exception as e:
