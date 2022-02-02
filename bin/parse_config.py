@@ -156,6 +156,9 @@ def update_study(study_id, config, skip_delete=False, delete_all=False):
         delete_all (bool, optional): Don't prompt the user and delete any
             records no longer defined in the config files.
     """
+
+    raise Exception
+
     try:
         config.set_study(study_id)
     except Exception as e:

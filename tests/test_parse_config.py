@@ -9,6 +9,11 @@ import dashboard
 pc = importlib.import_module("bin.parse_config")
 
 
+class TestPRTesting:
+    def test_pr_runs_new_test(self):
+        assert False
+
+
 class TestPromptUser:
 
     @patch("builtins.input")
