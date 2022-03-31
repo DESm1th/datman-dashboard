@@ -70,11 +70,13 @@
   {% include 'modals/delete_data.html' %}
   {% include 'modals/new_issue.html' %}
   {% include 'modals/review_scan.html' %}
+  {% include 'modals/papaya_viewer.html' %}
 
 </div>
 
   {% block footer_scripts %}
       <script type="text/javascript" src="{{ url_for('ajax_timepoints.static', filename='qc_header.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('ajax_timepoints.static', filename='view_scan.js') }}"></script>
   {% endblock %}
 
 {% endblock %}
