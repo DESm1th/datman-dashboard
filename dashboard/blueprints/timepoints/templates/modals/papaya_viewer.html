@@ -1,5 +1,5 @@
 <div id="papaya-modal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog" style="width: 80%; margin: auto">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">
@@ -8,10 +8,15 @@
         <h4 id="papaya-scan-name"></h4>
       </div>
       <div class="modal-body">
-        <iframe id="papaya-viewer" style="width: 100%; height: 100%;">
-          <!-- This used to have a src= attribute that pointed to the papaya view
-               but this time we'll add it when a button gets clicked -->
-        </iframe>
+        <div class="row">
+          <div id="papaya-nav-col" class="col-md-2">
+            {% include 'papaya_nav.html' %}
+          </div>
+          <div id="papaya-viewer-col" class="col-md-10">
+            <iframe id="papaya-viewer">
+            </iframe>
+          </div>
+        </div>
       </div>
     </div>
   </div>

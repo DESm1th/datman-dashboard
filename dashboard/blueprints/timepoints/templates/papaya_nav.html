@@ -1,0 +1,24 @@
+<div id="papaya-nav">
+    <div class="btn-group-lg" role="group">
+      <button id="loop-series" class="btn btn-primary" onclick="loopSeries();">
+        Play <i class="fas fa-play"></i>
+      </button>
+    </div>
+
+    <div id="play-speed-controls">
+      <label for="play-speed">Volumes per second: </label>
+      <input id="play-speed" type="number"/>
+      <button id="set-speed" onclick="updateSpeed();" class="btn btn-primary pull-right">Update</button>
+    </div>
+
+    <div id="change-volume-controls">
+      <button id="prev-series" class="btn btn-primary pull-left"
+          onclick="decSlice();">
+        <i class="fas fa-backward"></i> Prev
+      </button>
+      <button id="next-series" class="btn btn-primary pull-right"
+          onclick="incSlice();">
+        Next <i class="fas fa-forward"></i>
+      </button>
+    </div>
+</div>

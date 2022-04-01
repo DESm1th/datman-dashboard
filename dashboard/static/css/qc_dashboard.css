@@ -385,9 +385,35 @@ thead {
   font-size: .7em;
 }
 
+#papaya-viewer {
+  width: 100%;
+  height: 100%;
+}
+
 #papaya-nav {
   position: absolute;
   padding-top: 200px;
+  width: 160px;
+  height: 208px;
+  display: block;
+}
+
+#loop-series {
+  margin-left: 35px !important;
+}
+
+#play-speed-controls {
+  display: none;
+  margin: 10px 0px 20px 0px;
+}
+
+#play-speed-controls > input {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#change-volume-controls {
+  margin-top: 20px;
 }
 
 /**********************************************
