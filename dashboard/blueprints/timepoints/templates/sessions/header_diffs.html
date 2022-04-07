@@ -27,32 +27,37 @@
         </tr>
       {% else %}
         <tr>
-          <td>
-            {{ field }}
-            {% if field == 'SliceTiming' %}
+          {% if field == 'SliceTiming' %}
+            <td>
+              {{ field }}
               <br>
               <br>
               <div class="btn-group-vertical pull-right" data-scan="{{ scan.id }}"
                   data-study="{{ study_id }}"  role="group">
                 {% if "RepetitionTime" not in diffs and diffs[field]["actual"]|length == diffs[field]["expected"]|length %}
-                  <a class="button btn btn-danger"
-                     href="{{ url_for('scans.fix_slice_timing', study_id=study_id, scan_id=scan.id, auto=True) }}">
+                  <a class="button btn btn-danger" href="#">
                      Use Standard Timing
                   </a>
                 {% endif %}
-                <a class="button btn btn-danger"
-                   data-toggle="modal" href="#slice-timing-modal">
-                  Manual Edit
-                </a>
-                <a class="button btn btn-danger"
-                   href="{{ url_for('scans.fix_slice_timing', study_id=study_id, scan_id=scan.id, delete=True) }}">
-                  Delete Field
-                </a>
+                  <a class="button btn btn-danger" data-toggle="modal" href="#slice-timing-modal">
+                    Manual Edit
+                  </a>
+                  <a class="button btn btn-danger" href="#">
+                    Delete Field
+                  </a>
               </div>
-            {% endif %}
-          </td>
-          <td id="expected-timings-{{ scan.id }}">{{ diffs[field]['expected'] }}</td>
-          <td id="actual-timings-{{ scan.id }}">{{ diffs[field]['actual'] }}</td>
+            </td>
+            <td id="timings-expected-{{ scan.id }}">{{ diffs[field]['expected'] }}</td>
+            <td id="timings-actual-{{ scan.id }}">{{ diffs[field]['actual'] }}</td>
+          {% elif field == 'RepetitionTime' %}
+            <td>{{ field }}</td>
+            <td id="tr-expected-{{ scan.id }}">{{ diffs[field]['expected'] }}</td>
+            <td id="tr-actual-{{ scan.id }}">{{ diffs[field]['actual'] }}</td>
+          {% else %}
+            <td>{{ field }}</td>
+            <td>{{ diffs[field]['expected'] }}</td>
+            <td>{{ diffs[field]['actual'] }}</td>
+          {% endif %}
         </tr>
       {% endif %}
     {% endfor %}
