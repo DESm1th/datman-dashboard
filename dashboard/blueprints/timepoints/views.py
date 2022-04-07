@@ -3,7 +3,8 @@ import logging
 
 from flask import session as flask_session
 from flask import (render_template, flash, url_for, redirect,
-                   send_from_directory, jsonify, request, Response)
+                   send_from_directory, jsonify, request, Response,
+                   send_file, abort)
 from flask_login import current_user, login_required, fresh_login_required
 
 from . import time_bp, ajax_bp
@@ -11,10 +12,10 @@ from . import utils
 from .emails import incidental_finding_email
 from .forms import (EmptySessionForm, IncidentalFindingsForm,
                     TimepointCommentsForm, NewIssueForm, DataDeletionForm,
-                    ScanChecklistForm)
+                    ScanChecklistForm, SliceTimingForm)
 from ...utils import (report_form_errors, get_timepoint, get_session,
                       get_scan, dashboard_admin_required,
-                      study_admin_required, read_bool)
+                      study_admin_required, read_bool, prev_url)
 import dashboard.datman_utils as dm_utils
 
 logger = logging.getLogger(__name__)
@@ -43,24 +44,20 @@ def timepoint(study_id, timepoint_id):
             github_issues = None
 
     manifests = dm_utils.get_manifests(timepoint)
-    empty_form = EmptySessionForm()
-    findings_form = IncidentalFindingsForm()
-    comments_form = TimepointCommentsForm()
     new_issue_form = NewIssueForm()
-    delete_form = DataDeletionForm()
-    qc_form = ScanChecklistForm()
     new_issue_form.title.data = timepoint.name + " - "
     return render_template('main.html',
                            study_id=study_id,
                            timepoint=timepoint,
                            manifests=manifests,
-                           empty_session_form=empty_form,
-                           incidental_findings_form=findings_form,
-                           timepoint_comments_form=comments_form,
+                           empty_session_form=EmptySessionForm(),
+                           incidental_findings_form=IncidentalFindingsForm(),
+                           timepoint_comments_form=TimepointCommentsForm(),
                            issues=github_issues,
                            issue_form=new_issue_form,
-                           delete_form=delete_form,
-                           qc_form=qc_form)
+                           delete_form=DataDeletionForm(),
+                           qc_form=ScanChecklistForm(),
+                           slice_timing_form=SliceTimingForm())
 
 
 @time_bp.route('/sign_off/<int:session_num>', methods=['GET', 'POST'])
@@ -337,3 +334,45 @@ def review_scan():
     }
 
     return jsonify(response)
+
+
+@ajax_bp.route("/slice-timing", methods=["POST"])
+@login_required
+def fix_slice_timing():
+    try:
+        scan_id = request.json["scan"]
+        study_id = request.json["study"]
+    except KeyError:
+        return Response({"error": "Missing study or scan ID."}, status=400)
+
+    scan = get_scan(scan, study_id, current_user)
+
+    new_json = dict(scan.json_contents)
+
+    if request.json.get("auto-fix", False):
+        new_json["SliceTiming"] = scan.get_header_diffs(
+        )["SliceTiming"]["expected"]
+    elif request.json.get("delete", False):
+        del new_json["SliceTiming"]
+    else:
+        timing_form = SliceTimingForm()
+        if not timing_form.validate_on_submit():
+            return jsonify({"error": "Failed to update slice timings"})
+
+        new_timings = timing_form.timings.data
+        new_timings = new_timings.replace("[", "").replace("]", "")
+        new_json["SliceTiming"] = [
+            float(item.strip()) for item in new_timings.split(",")
+        ]
+
+    try:
+        utils.update_json(scan, new_json)
+    except Exception as e:
+        logger.error(f"Failed updating slice timings for scan {scan_id}. "
+                     f"Reason {type(e).__name__} {e}")
+        return jsonify({"error": ("Failed to update slice timings. Please "
+                                  "contact an admin for help.")})
+
+    dm_utils.update_header_diffs(scan)
+
+    return jsonify(success=True)

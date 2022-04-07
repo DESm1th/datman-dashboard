@@ -58,6 +58,17 @@
           <span class="fas fa-brain"></span> Open in Viewer
         </a>
         {% include 'sessions/qc_header.html' %}
+
+        {% if scan.conv_errors %}
+          {% include 'dcm2niix_details.html' %}
+        {% endif %}
+        {% set diffs = scan.get_header_diffs() %}
+        {% if diffs != {} %}
+          <div class="row">
+              {% include 'sessions/header_diffs.html' %}
+          </div>
+        {% endif %}
+
         {% if scan.name in manifests[session.num] %}
           {% for image in manifests[session.num][scan.name] %}
             {% set settings = manifests[session.num][scan.name][image] %}

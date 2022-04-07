@@ -10,6 +10,7 @@
     // Variables needed by javascript functions
     const csrfToken = "{{ csrf_token() }}";
     const reviewScanUrl = "{{ url_for('ajax_timepoints.review_scan') }}";
+    const sliceTimingUrl = "{{ url_for('ajax_timepoints.fix_slice_timing') }}";
   </script>
 
 {% endblock %}
@@ -71,6 +72,7 @@
   {% include 'modals/new_issue.html' %}
   {% include 'modals/review_scan.html' %}
   {% include 'modals/papaya_viewer.html' %}
+  {% include 'modals/slice_timing.html' %}
 
 </div>
 
