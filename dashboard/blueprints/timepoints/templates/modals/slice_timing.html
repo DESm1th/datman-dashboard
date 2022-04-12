@@ -15,17 +15,17 @@
             <div class="row">
               <div class="col-md-6">
                 <div><strong>Gold Standard Timings</strong></div>
-                <div id="slice-timings-gs" class="slice-timing"></div>
+                <div id="timings-expected-display" class="slice-timing"></div>
               </div>
               <div class="col-md-6">
                 <div><strong>Actual Slice Timings</strong></div>
-                <div id="slice-timings-actual" class="slice-timing"></div>
+                <div id="timings-actual-display" class="slice-timing"></div>
               </div>
             </div>
             <br>
             <div class="row">
               <div class="col-md-6">
-                <strong>TR:</strong> <span id="current-tr"></span>
+                <strong>TR:</strong> <span id="timings-tr-display"></span>
               </div>
             </div>
           </div>
@@ -45,44 +45,3 @@
     </div>
   </div>
 </div>
-
-<script type="text/javascript">
-  /*
-    To do:
-      - Have destination of submit change based on button clicked
-      - Switch to AJAX submit so page doesnt relaod
-      - Fill in 'expected' and 'actual' data
-      - Fill in the 'TR' data
-      - Fill in slice_timing_form.timings() in modal (???)
-  */
-
-  // These may not be needed anymore
-  var tr = parseFloat($("#current-tr")[0].textContent);
-  var submitButton = $("#submit_timings");
-  var textBox = $("#new_timings")[0];
-
-  submitButton.on("click", function() {
-    textBox.setCustomValidity("");
-    if (!textBox.validity.valid) {
-      // Dont change the message if the contents are invalid for a reason
-      // handled by the built in validators
-      return;
-    }
-    var newTimings = $("#new_timings").val().trim().split(",");
-    for (num = 0; num < newTimings.length; num++) {
-      current = parseFloat(newTimings[num]);
-      if (isNaN(current)) {
-        textBox.setCustomValidity("Only numeric entries allowed");
-        break;
-      } else if (current > tr) {
-        textBox.setCustomValidity("Entries must not be greater than the scan's TR");
-        break;
-      } else if (current < 0) {
-        textBox.setCustomValidity("Entries must be non-negative");
-        break;
-      }
-    }
-    textBox.reportValidity();
-  });
-
-</script>

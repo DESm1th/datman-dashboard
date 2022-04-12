@@ -32,17 +32,18 @@
               {{ field }}
               <br>
               <br>
-              <div class="btn-group-vertical pull-right" data-scan="{{ scan.id }}"
-                  data-study="{{ study_id }}"  role="group">
+              <div class="btn-group-vertical pull-right"
+                  data-scan="{{ scan.id }}" data-study="{{ study_id }}" role="group">
                 {% if "RepetitionTime" not in diffs and diffs[field]["actual"]|length == diffs[field]["expected"]|length %}
-                  <a class="button btn btn-danger" href="#">
+                  <a class="auto-update-timings button btn btn-danger" href="#">
                      Use Standard Timing
                   </a>
                 {% endif %}
-                  <a class="button btn btn-danger" data-toggle="modal" href="#slice-timing-modal">
+                  <a class="update-timings button btn btn-danger"
+                      data-toggle="modal" href="#slice-timing-modal">
                     Manual Edit
                   </a>
-                  <a class="button btn btn-danger" href="#">
+                  <a class="delete-timings button btn btn-danger" href="#">
                     Delete Field
                   </a>
               </div>

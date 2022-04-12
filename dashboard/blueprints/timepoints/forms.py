@@ -81,11 +81,11 @@ class ScanChecklistForm(FlaskForm):
 class SliceTimingForm(FlaskForm):
     timings = TextAreaField(
         'NewTimings',
-        id="new_timings",
+        id="new-timings",
         render_kw={
             'rows': 4,
             'cols': 65,
             'required': True,
             'placeholder': "Enter comma separated slice timings"
         })
-    submit = SubmitField('Update', id='submit_timings')
+    submit = SubmitField('Update', id='submit-timings')
