@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,18 +35,23 @@
           <div class="body" role="main">
             
   <section id="dashboard-blueprints-users-package">
-<h1>dashboard.blueprints.users package<a class="headerlink" href="#dashboard-blueprints-users-package" title="Permalink to this headline">¶</a></h1>
+<h1>dashboard.blueprints.users package<a class="headerlink" href="#dashboard-blueprints-users-package" title="Permalink to this heading">¶</a></h1>
 <section id="module-dashboard.blueprints.users">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.users" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.users" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.users.register_bp">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.</span></span><span class="sig-name descname"><span class="pre">register_bp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.register_bp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 <section id="module-dashboard.blueprints.users.forms">
-<span id="dashboard-blueprints-users-forms-module"></span><h3>dashboard.blueprints.users.forms module<a class="headerlink" href="#module-dashboard.blueprints.users.forms" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-users-forms-module"></span><h3>dashboard.blueprints.users.forms module<a class="headerlink" href="#module-dashboard.blueprints.users.forms" title="Permalink to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.AccessRequestForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.forms.</span></span><span class="sig-name descname"><span class="pre">AccessRequestForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.forms.AccessRequestForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.users.forms.UserForm" title="dashboard.blueprints.users.forms.UserForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">dashboard.blueprints.users.forms.UserForm</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.users.forms.UserForm" title="dashboard.blueprints.users.forms.UserForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserForm</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.AccessRequestForm.request_access">
 <span class="sig-name descname"><span class="pre">request_access</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(SelectMultipleField,</span> <span class="pre">('Request</span> <span class="pre">access</span> <span class="pre">to</span> <span class="pre">studies:</span> <span class="pre">',),</span> <span class="pre">{})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.users.forms.AccessRequestForm.request_access" title="Permalink to this definition">¶</a></dt>
@@ -66,7 +72,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.PermissionRadioField">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.forms.</span></span><span class="sig-name descname"><span class="pre">PermissionRadioField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.forms.PermissionRadioField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wtforms.fields.core.RadioField</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RadioField</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.PermissionRadioField.populate_obj">
 <span class="sig-name descname"><span class="pre">populate_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.forms.PermissionRadioField.populate_obj" title="Permalink to this definition">¶</a></dt>
@@ -80,7 +86,7 @@ booleans</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.StudyPermissionsForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.forms.</span></span><span class="sig-name descname"><span class="pre">StudyPermissionsForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.forms.StudyPermissionsForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.StudyPermissionsForm.does_qc">
 <span class="sig-name descname"><span class="pre">does_qc</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(PermissionRadioField,</span> <span class="pre">('Does</span> <span class="pre">QC',),</span> <span class="pre">{})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.users.forms.StudyPermissionsForm.does_qc" title="Permalink to this definition">¶</a></dt>
@@ -131,7 +137,7 @@ booleans</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.UserAdminForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.forms.</span></span><span class="sig-name descname"><span class="pre">UserAdminForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.forms.UserAdminForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.users.forms.UserForm" title="dashboard.blueprints.users.forms.UserForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">dashboard.blueprints.users.forms.UserForm</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.users.forms.UserForm" title="dashboard.blueprints.users.forms.UserForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserForm</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.UserAdminForm.add_access">
 <span class="sig-name descname"><span class="pre">add_access</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(SelectMultipleField,</span> <span class="pre">('Enable</span> <span class="pre">user</span> <span class="pre">access:</span> <span class="pre">',),</span> <span class="pre">{})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.users.forms.UserAdminForm.add_access" title="Permalink to this definition">¶</a></dt>
@@ -184,7 +190,7 @@ collection</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.UserForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.forms.</span></span><span class="sig-name descname"><span class="pre">UserForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.forms.UserForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.forms.UserForm.account">
 <span class="sig-name descname"><span class="pre">account</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextField,</span> <span class="pre">('Username:</span> <span class="pre">',),</span> <span class="pre">{'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'required':</span> <span class="pre">True,</span> <span class="pre">'maxlength':</span> <span class="pre">'64',</span> <span class="pre">'placeholder':</span> <span class="pre">&quot;Username</span> <span class="pre">used</span> <span class="pre">on</span> <span class="pre">account</span> <span class="pre">provider's</span> <span class="pre">site&quot;}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.users.forms.UserForm.account" title="Permalink to this definition">¶</a></dt>
@@ -254,7 +260,7 @@ collection</p>
 
 </section>
 <section id="module-dashboard.blueprints.users.utils">
-<span id="dashboard-blueprints-users-utils-module"></span><h3>dashboard.blueprints.users.utils module<a class="headerlink" href="#module-dashboard.blueprints.users.utils" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-users-utils-module"></span><h3>dashboard.blueprints.users.utils module<a class="headerlink" href="#module-dashboard.blueprints.users.utils" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.utils.get_admin_user_form">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.utils.</span></span><span class="sig-name descname"><span class="pre">get_admin_user_form</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.utils.get_admin_user_form" title="Permalink to this definition">¶</a></dt>
@@ -293,7 +299,7 @@ enable. The empty list indicates ‘all sites’.</p>
 
 </section>
 <section id="module-dashboard.blueprints.users.views">
-<span id="dashboard-blueprints-users-views-module"></span><h3>dashboard.blueprints.users.views module<a class="headerlink" href="#module-dashboard.blueprints.users.views" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-users-views-module"></span><h3>dashboard.blueprints.users.views module<a class="headerlink" href="#module-dashboard.blueprints.users.views" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.users.views.before_request">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.users.views.</span></span><span class="sig-name descname"><span class="pre">before_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.users.views.before_request" title="Permalink to this definition">¶</a></dt>
@@ -358,6 +364,7 @@ enable. The empty list indicates ‘all sites’.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer Resources</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Dashboard API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">Module contents</a></li>
@@ -391,7 +398,7 @@ enable. The empty list indicates ‘all sites’.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -408,7 +415,7 @@ enable. The empty list indicates ‘all sites’.</p>
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,15 +35,15 @@
           <div class="body" role="main">
             
   <section id="dashboard-blueprints-scans-package">
-<h1>dashboard.blueprints.scans package<a class="headerlink" href="#dashboard-blueprints-scans-package" title="Permalink to this headline">¶</a></h1>
+<h1>dashboard.blueprints.scans package<a class="headerlink" href="#dashboard-blueprints-scans-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 <section id="module-dashboard.blueprints.scans.forms">
-<span id="dashboard-blueprints-scans-forms-module"></span><h3>dashboard.blueprints.scans.forms module<a class="headerlink" href="#module-dashboard.blueprints.scans.forms" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-scans-forms-module"></span><h3>dashboard.blueprints.scans.forms module<a class="headerlink" href="#module-dashboard.blueprints.scans.forms" title="Permalink to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.scans.forms.ScanChecklistForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.scans.forms.</span></span><span class="sig-name descname"><span class="pre">ScanChecklistForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.scans.forms.ScanChecklistForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.scans.forms.ScanChecklistForm.comment">
 <span class="sig-name descname"><span class="pre">comment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextAreaField,</span> <span class="pre">('Comment:',),</span> <span class="pre">{'id':</span> <span class="pre">'scan-comment',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'placeholder':</span> <span class="pre">'Add</span> <span class="pre">description',</span> <span class="pre">'rows':</span> <span class="pre">12,</span> <span class="pre">'required':</span> <span class="pre">True,</span> <span class="pre">'maxlength':</span> <span class="pre">'1028'}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.scans.forms.ScanChecklistForm.comment" title="Permalink to this definition">¶</a></dt>
@@ -58,7 +59,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.scans.forms.SliceTimingForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.scans.forms.</span></span><span class="sig-name descname"><span class="pre">SliceTimingForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.scans.forms.SliceTimingForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.scans.forms.SliceTimingForm.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(SubmitField,</span> <span class="pre">('Update',),</span> <span class="pre">{'id':</span> <span class="pre">'submit_timings'})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.scans.forms.SliceTimingForm.submit" title="Permalink to this definition">¶</a></dt>
@@ -73,7 +74,7 @@
 
 </section>
 <section id="module-dashboard.blueprints.scans.utils">
-<span id="dashboard-blueprints-scans-utils-module"></span><h3>dashboard.blueprints.scans.utils module<a class="headerlink" href="#module-dashboard.blueprints.scans.utils" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-scans-utils-module"></span><h3>dashboard.blueprints.scans.utils module<a class="headerlink" href="#module-dashboard.blueprints.scans.utils" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.scans.utils.get_nifti_path">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.scans.utils.</span></span><span class="sig-name descname"><span class="pre">get_nifti_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.scans.utils.get_nifti_path" title="Permalink to this definition">¶</a></dt>
@@ -86,7 +87,7 @@
 
 </section>
 <section id="module-dashboard.blueprints.scans.views">
-<span id="dashboard-blueprints-scans-views-module"></span><h3>dashboard.blueprints.scans.views module<a class="headerlink" href="#module-dashboard.blueprints.scans.views" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-scans-views-module"></span><h3>dashboard.blueprints.scans.views module<a class="headerlink" href="#module-dashboard.blueprints.scans.views" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.scans.views.fix_slice_timing">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.scans.views.</span></span><span class="sig-name descname"><span class="pre">fix_slice_timing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">study_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.scans.views.fix_slice_timing" title="Permalink to this definition">¶</a></dt>
@@ -120,7 +121,12 @@ the URL or papaya will trip over decompression issues.</p>
 </section>
 </section>
 <section id="module-dashboard.blueprints.scans">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.scans" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.scans" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.scans.register_bp">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.scans.</span></span><span class="sig-name descname"><span class="pre">register_bp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.scans.register_bp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 </section>
 
@@ -144,6 +150,7 @@ the URL or papaya will trip over decompression issues.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer Resources</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Dashboard API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">Module contents</a></li>
@@ -177,7 +184,7 @@ the URL or papaya will trip over decompression issues.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -194,7 +201,7 @@ the URL or papaya will trip over decompression issues.</p>
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

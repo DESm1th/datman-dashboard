@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,21 +35,26 @@
           <div class="body" role="main">
             
   <section id="dashboard-blueprints-auth-package">
-<h1>dashboard.blueprints.auth package<a class="headerlink" href="#dashboard-blueprints-auth-package" title="Permalink to this headline">¶</a></h1>
+<h1>dashboard.blueprints.auth package<a class="headerlink" href="#dashboard-blueprints-auth-package" title="Permalink to this heading">¶</a></h1>
 <section id="module-dashboard.blueprints.auth">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.auth" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.auth" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.auth.register_bp">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.auth.</span></span><span class="sig-name descname"><span class="pre">register_bp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.auth.register_bp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 <section id="module-dashboard.blueprints.auth.oauth">
-<span id="dashboard-blueprints-auth-oauth-module"></span><h3>dashboard.blueprints.auth.oauth module<a class="headerlink" href="#module-dashboard.blueprints.auth.oauth" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-auth-oauth-module"></span><h3>dashboard.blueprints.auth.oauth module<a class="headerlink" href="#module-dashboard.blueprints.auth.oauth" title="Permalink to this heading">¶</a></h3>
 <p>This allows users to be validated using the OAuth protocol</p>
 <p>See <a class="reference external" href="https://blog.miguelgrinberg.com/post/oauth-authentication-with-flask">https://blog.miguelgrinberg.com/post/oauth-authentication-with-flask</a> for
 an overview.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.auth.oauth.GithubSignIn">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.auth.oauth.</span></span><span class="sig-name descname"><span class="pre">GithubSignIn</span></span><a class="headerlink" href="#dashboard.blueprints.auth.oauth.GithubSignIn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.auth.oauth.OAuthSignIn" title="dashboard.blueprints.auth.oauth.OAuthSignIn"><code class="xref py py-class docutils literal notranslate"><span class="pre">dashboard.blueprints.auth.oauth.OAuthSignIn</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.auth.oauth.OAuthSignIn" title="dashboard.blueprints.auth.oauth.OAuthSignIn"><code class="xref py py-class docutils literal notranslate"><span class="pre">OAuthSignIn</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dashboard.blueprints.auth.oauth.GithubSignIn.authorize">
 <span class="sig-name descname"><span class="pre">authorize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.auth.oauth.GithubSignIn.authorize" title="Permalink to this definition">¶</a></dt>
@@ -64,7 +70,7 @@ an overview.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.auth.oauth.GitlabSignIn">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.auth.oauth.</span></span><span class="sig-name descname"><span class="pre">GitlabSignIn</span></span><a class="headerlink" href="#dashboard.blueprints.auth.oauth.GitlabSignIn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.auth.oauth.OAuthSignIn" title="dashboard.blueprints.auth.oauth.OAuthSignIn"><code class="xref py py-class docutils literal notranslate"><span class="pre">dashboard.blueprints.auth.oauth.OAuthSignIn</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#dashboard.blueprints.auth.oauth.OAuthSignIn" title="dashboard.blueprints.auth.oauth.OAuthSignIn"><code class="xref py py-class docutils literal notranslate"><span class="pre">OAuthSignIn</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dashboard.blueprints.auth.oauth.GitlabSignIn.authorize">
 <span class="sig-name descname"><span class="pre">authorize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.auth.oauth.GitlabSignIn.authorize" title="Permalink to this definition">¶</a></dt>
@@ -121,7 +127,7 @@ an overview.</p>
 
 </section>
 <section id="module-dashboard.blueprints.auth.views">
-<span id="dashboard-blueprints-auth-views-module"></span><h3>dashboard.blueprints.auth.views module<a class="headerlink" href="#module-dashboard.blueprints.auth.views" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-auth-views-module"></span><h3>dashboard.blueprints.auth.views module<a class="headerlink" href="#module-dashboard.blueprints.auth.views" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.auth.views.oauth_authorize">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.auth.views.</span></span><span class="sig-name descname"><span class="pre">oauth_authorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.auth.views.oauth_authorize" title="Permalink to this definition">¶</a></dt>
@@ -156,6 +162,7 @@ an overview.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer Resources</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Dashboard API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">Module contents</a></li>
@@ -189,7 +196,7 @@ an overview.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -206,7 +213,7 @@ an overview.</p>
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

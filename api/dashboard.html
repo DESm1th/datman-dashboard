@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,12 +35,12 @@
           <div class="body" role="main">
             
   <section id="module-dashboard">
-<span id="module-contents"></span><h1>Module contents<a class="headerlink" href="#module-dashboard" title="Permalink to this headline">¶</a></h1>
+<span id="module-contents"></span><h1>Module contents<a class="headerlink" href="#module-dashboard" title="Permalink to this heading">¶</a></h1>
 <p>Setup and initialization for the QC Dashboard.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.RegexConverter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.</span></span><span class="sig-name descname"><span class="pre">RegexConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_map</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.RegexConverter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">werkzeug.routing.BaseConverter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConverter</span></code></p>
 <p>A ‘regex’ type for URL routes.</p>
 <p>For whatever reason Flask (as of this writing) does not appear to have a
 built-in way to allow regular expressions in URL routes. RegexConverter
@@ -76,6 +77,14 @@ and register all blueprints.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dashboard.load_blueprints">
+<span class="sig-prename descclassname"><span class="pre">dashboard.</span></span><span class="sig-name descname"><span class="pre">load_blueprints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.load_blueprints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register all blueprints for the app.</p>
+<p>A blueprint must be in the dashboard’s blueprint folder and must
+implement the ‘register_bp’ function to be loaded by this function.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dashboard.setup_devel_ext">
 <span class="sig-prename descclassname"><span class="pre">dashboard.</span></span><span class="sig-name descname"><span class="pre">setup_devel_ext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.setup_devel_ext" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up extensions only used within development environments.</p>
@@ -83,9 +92,9 @@ and register all blueprints.</p>
 
 </section>
 <section id="submodules">
-<h1>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h1>
+<h1>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h1>
 <section id="module-dashboard.datman_utils">
-<span id="dashboard-datman-utils-module"></span><h2>dashboard.datman_utils module<a class="headerlink" href="#module-dashboard.datman_utils" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-datman-utils-module"></span><h2>dashboard.datman_utils module<a class="headerlink" href="#module-dashboard.datman_utils" title="Permalink to this heading">¶</a></h2>
 <p>Dashboard functionality that requires datman’s config module.</p>
 <p>Some parts of the dashboard need datman.config to locate things on the file
 system but datman.config uses the dashboard’s models. So to help prevent
@@ -125,11 +134,57 @@ We have to solve the datman.config circular reference issues to fix this. :(</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dashboard.datman_utils.get_manifests">
+<span class="sig-prename descclassname"><span class="pre">dashboard.datman_utils.</span></span><span class="sig-name descname"><span class="pre">get_manifests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timepoint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.datman_utils.get_manifests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects and organizes all QC manifest files for a timepoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timepoint</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dashboard.models.Timepoint</span></code>) – A timepoint from the
+database.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A dictionary mapping session numbers to a dictionary of input nifti
+files and their manifest contents.</p>
+<p>For example:
+{</p>
+<blockquote>
+<div><blockquote>
+<div><dl class="simple">
+<dt>1: {nifti_1: nifti_1_manifest,</dt><dd><p>nifti_2: nifti_2_manifest},</p>
+</dd>
+</dl>
+<p>2: {nifti_3: nifti_3_manifest}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dashboard.datman_utils.get_study_path">
 <span class="sig-prename descclassname"><span class="pre">dashboard.datman_utils.</span></span><span class="sig-name descname"><span class="pre">get_study_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">study</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.datman_utils.get_study_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the full path to the study on the file system.</p>
 <p>If folder is supplied and is defined in study config
 then path to the folder is returned instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.datman_utils.read_json">
+<span class="sig-prename descclassname"><span class="pre">dashboard.datman_utils.</span></span><span class="sig-name descname"><span class="pre">read_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.datman_utils.read_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a json file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_file</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – The full path the the json file to load.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of the json contents or an error message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -139,7 +194,7 @@ then path to the folder is returned instead.</p>
 
 </section>
 <section id="module-dashboard.emails">
-<span id="dashboard-emails-module"></span><h2>dashboard.emails module<a class="headerlink" href="#module-dashboard.emails" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-emails-module"></span><h2>dashboard.emails module<a class="headerlink" href="#module-dashboard.emails" title="Permalink to this heading">¶</a></h2>
 <p>Functions for sending email notifications.</p>
 <p>If an email message <strong>must</strong> be sent from the server side, and it isn’t used
 exclusively by view functions (which only run on the server), then it needs to
@@ -209,7 +264,7 @@ dashboard admin(s).</p></li>
 
 </section>
 <section id="module-dashboard.exceptions">
-<span id="dashboard-exceptions-module"></span><h2>dashboard.exceptions module<a class="headerlink" href="#module-dashboard.exceptions" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-exceptions-module"></span><h2>dashboard.exceptions module<a class="headerlink" href="#module-dashboard.exceptions" title="Permalink to this heading">¶</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="dashboard.exceptions.InvalidDataException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidDataException</span></span><a class="headerlink" href="#dashboard.exceptions.InvalidDataException" title="Permalink to this definition">¶</a></dt>
@@ -257,7 +312,7 @@ dashboard admin(s).</p></li>
 
 </section>
 <section id="module-dashboard.forms">
-<span id="dashboard-forms-module"></span><h2>dashboard.forms module<a class="headerlink" href="#module-dashboard.forms" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-forms-module"></span><h2>dashboard.forms module<a class="headerlink" href="#module-dashboard.forms" title="Permalink to this heading">¶</a></h2>
 <p>Web forms used by the dashboard.</p>
 <p>Forms are defined using the
 ` Flask-WTForms &lt;<a class="reference external" href="https://wtforms.readthedocs.io/en/latest/">https://wtforms.readthedocs.io/en/latest/</a>&gt;`_ extension. This
@@ -266,7 +321,7 @@ or avoiding CSRF vulnerabilities.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.forms.AnalysisForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.forms.</span></span><span class="sig-name descname"><span class="pre">AnalysisForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.forms.AnalysisForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <p>Add a new analysis to the dashboard.</p>
 <p>This feature has not yet been fully implemented.</p>
 <dl class="py attribute">
@@ -289,7 +344,7 @@ or avoiding CSRF vulnerabilities.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.forms.SelectMetricsForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.forms.</span></span><span class="sig-name descname"><span class="pre">SelectMetricsForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.forms.SelectMetricsForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <p>Choose metrics from the database.</p>
 <p>This form needs to be updated when we fix our QC metric integrations.</p>
 <dl class="py attribute">
@@ -367,7 +422,7 @@ or avoiding CSRF vulnerabilities.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.forms.StudyOverviewForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.forms.</span></span><span class="sig-name descname"><span class="pre">StudyOverviewForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.forms.StudyOverviewForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <p>Make edits to a study’s README form.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.forms.StudyOverviewForm.readme_txt">
@@ -383,7 +438,7 @@ or avoiding CSRF vulnerabilities.</p>
 
 </section>
 <section id="module-dashboard.monitors">
-<span id="dashboard-monitors-module"></span><h2>dashboard.monitors module<a class="headerlink" href="#module-dashboard.monitors" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-monitors-module"></span><h2>dashboard.monitors module<a class="headerlink" href="#module-dashboard.monitors" title="Permalink to this heading">¶</a></h2>
 <p>Add and run scheduled jobs.</p>
 <dl class="simple">
 <dt>Each scheduled job requires two pieces:</dt><dd><ol class="arabic simple">
@@ -508,7 +563,7 @@ if the session belongs to more than one.</p></li>
 
 </section>
 <section id="module-dashboard.queries">
-<span id="dashboard-queries-module"></span><h2>dashboard.queries module<a class="headerlink" href="#module-dashboard.queries" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-queries-module"></span><h2>dashboard.queries module<a class="headerlink" href="#module-dashboard.queries" title="Permalink to this heading">¶</a></h2>
 <p>Reusable database queries.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.queries.find_scans">
@@ -669,11 +724,11 @@ MetricTypes=[‘SNR’])</p>
 
 </section>
 <section id="module-dashboard.task_scheduler">
-<span id="dashboard-task-scheduler-module"></span><h2>dashboard.task_scheduler module<a class="headerlink" href="#module-dashboard.task_scheduler" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-task-scheduler-module"></span><h2>dashboard.task_scheduler module<a class="headerlink" href="#module-dashboard.task_scheduler" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.task_scheduler.ContextThreadExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.task_scheduler.</span></span><span class="sig-name descname"><span class="pre">ContextThreadExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.task_scheduler.ContextThreadExecutor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">apscheduler.executors.pool.ThreadPoolExecutor</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></p>
 <p>Runs all scheduler jobs within the app context.</p>
 <p>By default ThreadPoolExecutor does not propagate the app context correctly
 when it submits jobs to its pool to execute. This class fixes the problem
@@ -723,7 +778,7 @@ points can found in flask_apscheduler/scheduler.py in
 
 </section>
 <section id="module-dashboard.utils">
-<span id="dashboard-utils-module"></span><h2>dashboard.utils module<a class="headerlink" href="#module-dashboard.utils" title="Permalink to this headline">¶</a></h2>
+<span id="dashboard-utils-module"></span><h2>dashboard.utils module<a class="headerlink" href="#module-dashboard.utils" title="Permalink to this heading">¶</a></h2>
 <p>Helper functions for views.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.utils.dashboard_admin_required">
@@ -759,6 +814,14 @@ the user to the index.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dashboard.utils.read_bool">
+<span class="sig-prename descclassname"><span class="pre">dashboard.utils.</span></span><span class="sig-name descname"><span class="pre">read_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.utils.read_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a value to boolean.</p>
+<p>bool(value) misreads “false”/”False” as True, so we use this instead
+when parsing booleans from JSON requests.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dashboard.utils.report_form_errors">
 <span class="sig-prename descclassname"><span class="pre">dashboard.utils.</span></span><span class="sig-name descname"><span class="pre">report_form_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.utils.report_form_errors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -773,7 +836,7 @@ this wraps must have ‘study_id’ as an argument</p>
 </section>
 </section>
 <section id="subpackages">
-<h1>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h1>
+<h1>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="dashboard.blueprints.html">Blueprints</a><ul>
@@ -884,6 +947,7 @@ this wraps must have ‘study_id’ as an argument</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer Resources</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Dashboard API</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module contents</a></li>
@@ -913,7 +977,7 @@ this wraps must have ‘study_id’ as an argument</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -930,7 +994,7 @@ this wraps must have ‘study_id’ as an argument</p>
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

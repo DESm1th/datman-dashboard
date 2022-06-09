@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
@@ -106,16 +107,18 @@
 </li>
       <li><a href="api/dashboard.html#dashboard.monitors.add_monitor">add_monitor() (in module dashboard.monitors)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Study.add_pipeline">add_pipeline() (dashboard.models.models.Study method)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Session.add_redcap">add_redcap() (dashboard.models.models.Session method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Session.add_scan">add_scan() (dashboard.models.models.Session method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.add_session">add_session() (dashboard.models.models.Timepoint method)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.User.add_studies">add_studies() (dashboard.models.models.User method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.User.add_studies">add_studies() (dashboard.models.models.User method)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Session.add_task">add_task() (dashboard.models.models.Session method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.add_timepoint">add_timepoint() (dashboard.models.models.Study method)</a>
@@ -231,6 +234,8 @@
 </li>
         <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.IncidentalFindingsForm.comment">(dashboard.blueprints.timepoints.forms.IncidentalFindingsForm attribute)</a>
 </li>
+        <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.ScanChecklistForm.comment">(dashboard.blueprints.timepoints.forms.ScanChecklistForm attribute)</a>
+</li>
         <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.TimepointCommentsForm.comment">(dashboard.blueprints.timepoints.forms.TimepointCommentsForm attribute)</a>
 </li>
         <li><a href="api/dashboard.models.html#dashboard.models.models.AnalysisComment.comment">(dashboard.models.models.AnalysisComment attribute)</a>
@@ -252,7 +257,7 @@
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapConfig.completed_field">completed_field (dashboard.models.models.RedcapConfig attribute)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapConfig.completed_value">completed_value (dashboard.models.models.RedcapConfig attribute)</a>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapConfig.completed_value">completed_value (dashboard.models.models.RedcapConfig property)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapRecord.config">config (dashboard.models.models.RedcapRecord attribute)</a>
 </li>
@@ -685,10 +690,10 @@
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapConfig.event_ids">event_ids (dashboard.models.models.RedcapConfig attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.models.html#dashboard.models.models.AnalysisComment.excluded">excluded (dashboard.models.models.AnalysisComment attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.models.html#dashboard.models.models.GoldStandard.expected_scan">expected_scan (dashboard.models.models.GoldStandard attribute)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Scantype.expected_scans">expected_scans (dashboard.models.models.Scantype attribute)</a>
@@ -699,6 +704,12 @@
       </ul></li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.ExpectedScan">ExpectedScan (class in dashboard.models.models)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Session.expects_notes">expects_notes() (dashboard.models.models.Session method)</a>
+
+      <ul>
+        <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.expects_notes">(dashboard.models.models.Timepoint method)</a>
+</li>
+      </ul></li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.expects_redcap">expects_redcap() (dashboard.models.models.Timepoint method)</a>
 </li>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.forms.UserForm.ext">ext (dashboard.blueprints.users.forms.UserForm attribute)</a>
@@ -777,11 +788,15 @@
 </li>
       <li><a href="api/dashboard.html#dashboard.monitors.get_emails">get_emails() (in module dashboard.monitors)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Session.get_expected_scans">get_expected_scans() (dashboard.models.models.Session method)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_flagged_scans">get_flagged_scans() (dashboard.models.models.Study method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.get_header_diffs">get_header_diffs() (dashboard.models.models.Scan method)</a>
 </li>
       <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.utils.get_issues_repo">get_issues_repo() (in module dashboard.blueprints.timepoints.utils)</a>
+</li>
+      <li><a href="api/dashboard.html#dashboard.datman_utils.get_manifests">get_manifests() (in module dashboard.datman_utils)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_missing_redcap">get_missing_redcap() (dashboard.models.models.Study method)</a>
 </li>
@@ -790,6 +805,8 @@
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_new_sessions">get_new_sessions() (dashboard.models.models.Study method)</a>
 </li>
       <li><a href="api/dashboard.blueprints.scans.html#dashboard.blueprints.scans.utils.get_nifti_path">get_nifti_path() (in module dashboard.blueprints.scans.utils)</a>
+</li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_pipelines">get_pipelines() (dashboard.models.models.Study method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_primary_contacts">get_primary_contacts() (dashboard.models.models.Study method)</a>
 </li>
@@ -805,14 +822,14 @@
 </li>
       <li><a href="api/dashboard.blueprints.redcap.html#dashboard.blueprints.redcap.utils.get_redcap_record">get_redcap_record() (in module dashboard.blueprints.redcap.utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.html#dashboard.queries.get_scan">get_scan() (in module dashboard.queries)</a>
 
       <ul>
         <li><a href="api/dashboard.html#dashboard.utils.get_scan">(in module dashboard.utils)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.html#dashboard.queries.get_scantypes">get_scantypes() (in module dashboard.queries)</a>
 </li>
       <li><a href="api/dashboard.html#dashboard.queries.get_session">get_session() (in module dashboard.queries)</a>
@@ -845,6 +862,8 @@
 </li>
       <li><a href="api/dashboard.html#dashboard.queries.get_study_timepoints">get_study_timepoints() (in module dashboard.queries)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_tag_counts">get_tag_counts() (dashboard.models.models.Study method)</a>
+</li>
       <li><a href="api/dashboard.blueprints.redcap.html#dashboard.blueprints.redcap.utils.get_timepoint">get_timepoint() (in module dashboard.blueprints.redcap.utils)</a>
 
       <ul>
@@ -856,8 +875,6 @@
       <li><a href="api/dashboard.html#dashboard.queries.get_user">get_user() (in module dashboard.queries)</a>
 </li>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.utils.get_user_form">get_user_form() (in module dashboard.blueprints.users.utils)</a>
-</li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.Study.get_valid_metric_names">get_valid_metric_names() (dashboard.models.models.Study method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.utils.get_xnat_credentials">get_xnat_credentials() (in module dashboard.models.utils)</a>
 </li>
@@ -949,14 +966,14 @@
 </li>
       <li><a href="api/dashboard.html#dashboard.task_scheduler.RemoteScheduler.init_app">init_app() (dashboard.task_scheduler.RemoteScheduler method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.forms.UserForm.institution">institution (dashboard.blueprints.users.forms.UserForm attribute)</a>
 
       <ul>
         <li><a href="api/dashboard.models.html#dashboard.models.models.User.institution">(dashboard.models.models.User attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapConfig.instrument">instrument (dashboard.models.models.RedcapConfig attribute)</a>
 
       <ul>
@@ -992,6 +1009,8 @@
 </li>
       </ul></li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.is_open">is_open (dashboard.models.models.Study attribute)</a>
+</li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.is_outdated_header_diffs">is_outdated_header_diffs() (dashboard.models.models.Scan method)</a>
 </li>
       <li><a href="api/dashboard.html#dashboard.forms.SelectMetricsForm.is_phantom">is_phantom (dashboard.forms.SelectMetricsForm attribute)</a>
 
@@ -1073,7 +1092,7 @@
         <li><a href="api/dashboard.models.html#dashboard.models.models.User.last_name">(dashboard.models.models.User attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.last_qc_repeat_generated">last_qc_repeat_generated (dashboard.models.models.Timepoint attribute)</a>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.length">length (dashboard.models.models.Scan attribute)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.links">links (dashboard.models.models.Scan attribute)</a>
 </li>
@@ -1082,6 +1101,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.models.html#dashboard.models.utils.DictListCollection.list_mod">list_mod() (dashboard.models.utils.DictListCollection method)</a>
+</li>
+      <li><a href="api/dashboard.html#dashboard.load_blueprints">load_blueprints() (in module dashboard)</a>
 </li>
       <li><a href="api/dashboard.blueprints.scans.html#dashboard.blueprints.scans.views.load_scan">load_scan() (in module dashboard.blueprints.scans.views)</a>
 </li>
@@ -1257,6 +1278,8 @@
 </li>
         <li><a href="api/dashboard.models.html#dashboard.models.models.Study.name">(dashboard.models.models.Study attribute)</a>
 </li>
+        <li><a href="api/dashboard.models.html#dashboard.models.models.StudyPipeline.name">(dashboard.models.models.StudyPipeline attribute)</a>
+</li>
         <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.name">(dashboard.models.models.Timepoint attribute)</a>
 </li>
       </ul></li>
@@ -1264,12 +1287,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.needs_redcap_survey">needs_redcap_survey() (dashboard.models.models.Timepoint method)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.Study.needs_rewrite">needs_rewrite() (dashboard.models.models.Study method)</a>
-
-      <ul>
-        <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.needs_rewrite">(dashboard.models.models.Timepoint method)</a>
-</li>
-      </ul></li>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.views.new_account">new_account() (in module dashboard.blueprints.users.views)</a>
 </li>
       <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.NewIssueForm">NewIssueForm (class in dashboard.blueprints.timepoints.forms)</a>
@@ -1330,16 +1347,20 @@
       </ul></li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.User.picture">picture (dashboard.models.models.User attribute)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.StudyPipeline.pipeline_id">pipeline_id (dashboard.models.models.StudyPipeline attribute)</a>
+</li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.PipelineScope">PipelineScope (class in dashboard.models.models)</a>
+</li>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.utils.populate_disabled_sites">populate_disabled_sites() (in module dashboard.blueprints.users.utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.forms.PermissionRadioField.populate_obj">populate_obj() (dashboard.blueprints.users.forms.PermissionRadioField method)</a>
 
       <ul>
         <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.forms.UserAdminForm.populate_obj">(dashboard.blueprints.users.forms.UserAdminForm method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.forms.UserForm.position">position (dashboard.blueprints.users.forms.UserForm attribute)</a>
 
       <ul>
@@ -1374,12 +1395,18 @@
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.views.qc_files">qc_files() (in module dashboard.blueprints.timepoints.views)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.emails.qc_notification_email">qc_notification_email() (in module dashboard.models.emails)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.qc_review">qc_review (dashboard.models.models.Scan attribute)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.Scantype.qc_type">qc_type (dashboard.models.models.Scantype attribute)</a>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.qc_type">qc_type (dashboard.models.models.Scan property)</a>
+
+      <ul>
+        <li><a href="api/dashboard.models.html#dashboard.models.models.Scantype.qc_type">(dashboard.models.models.Scantype attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.html#dashboard.forms.SelectMetricsForm.query_complete">query_complete (dashboard.forms.SelectMetricsForm attribute)</a>
@@ -1400,8 +1427,14 @@
 </li>
       <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.DataDeletionForm.raw_data">raw_data (dashboard.blueprints.timepoints.forms.DataDeletionForm attribute)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.utils.read_json">read_json() (in module dashboard.models.utils)</a>
+      <li><a href="api/dashboard.html#dashboard.utils.read_bool">read_bool() (in module dashboard.utils)</a>
 </li>
+      <li><a href="api/dashboard.html#dashboard.datman_utils.read_json">read_json() (in module dashboard.datman_utils)</a>
+
+      <ul>
+        <li><a href="api/dashboard.models.html#dashboard.models.utils.read_json">(in module dashboard.models.utils)</a>
+</li>
+      </ul></li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Study.read_me">read_me (dashboard.models.models.Study attribute)</a>
 </li>
       <li><a href="api/dashboard.html#dashboard.forms.StudyOverviewForm.readme_txt">readme_txt (dashboard.forms.StudyOverviewForm attribute)</a>
@@ -1434,12 +1467,28 @@
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.RedcapRecord">RedcapRecord (class in dashboard.models.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.views.refresh_login">refresh_login() (in module dashboard.blueprints.users.views)</a>
 </li>
       <li><a href="api/dashboard.html#dashboard.RegexConverter">RegexConverter (class in dashboard)</a>
 </li>
+      <li><a href="api/dashboard.blueprints.auth.html#dashboard.blueprints.auth.register_bp">register_bp() (in module dashboard.blueprints.auth)</a>
+
+      <ul>
+        <li><a href="api/dashboard.blueprints.handlers.html#dashboard.blueprints.handlers.register_bp">(in module dashboard.blueprints.handlers)</a>
+</li>
+        <li><a href="api/dashboard.blueprints.main.html#dashboard.blueprints.main.register_bp">(in module dashboard.blueprints.main)</a>
+</li>
+        <li><a href="api/dashboard.blueprints.redcap.html#dashboard.blueprints.redcap.register_bp">(in module dashboard.blueprints.redcap)</a>
+</li>
+        <li><a href="api/dashboard.blueprints.scans.html#dashboard.blueprints.scans.register_bp">(in module dashboard.blueprints.scans)</a>
+</li>
+        <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.register_bp">(in module dashboard.blueprints.timepoints)</a>
+</li>
+        <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.register_bp">(in module dashboard.blueprints.users)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/dashboard.models.html#dashboard.models.models.AccountRequest.reject">reject() (dashboard.models.models.AccountRequest method)</a>
 </li>
       <li><a href="api/dashboard.html#dashboard.task_scheduler.RemoteScheduler">RemoteScheduler (class in dashboard.task_scheduler)</a>
@@ -1461,6 +1510,8 @@
       <li><a href="api/dashboard.models.html#dashboard.models.models.User.request_account">request_account() (dashboard.models.models.User method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Session.review_date">review_date (dashboard.models.models.Session attribute)</a>
+</li>
+      <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.views.review_scan">review_scan() (in module dashboard.blueprints.timepoints.views)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.EmptySession.reviewer">reviewer (dashboard.models.models.EmptySession attribute)</a>
 
@@ -1523,7 +1574,11 @@
       <li><a href="api/dashboard.models.html#dashboard.models.models.ScanChecklist">ScanChecklist (class in dashboard.models.models)</a>
 </li>
       <li><a href="api/dashboard.blueprints.scans.html#dashboard.blueprints.scans.forms.ScanChecklistForm">ScanChecklistForm (class in dashboard.blueprints.scans.forms)</a>
+
+      <ul>
+        <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.ScanChecklistForm">(class in dashboard.blueprints.timepoints.forms)</a>
 </li>
+      </ul></li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.ScanGoldStandard">ScanGoldStandard (class in dashboard.models.models)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.GoldStandard.scans">scans (dashboard.models.models.GoldStandard attribute)</a>
@@ -1560,6 +1615,12 @@
 </li>
       <li><a href="api/dashboard.html#dashboard.exceptions.SchedulerException">SchedulerException</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.PipelineScope.scope">scope (dashboard.models.models.PipelineScope attribute)</a>
+
+      <ul>
+        <li><a href="api/dashboard.models.html#dashboard.models.models.StudyPipeline.scope">(dashboard.models.models.StudyPipeline attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/dashboard.blueprints.main.html#dashboard.blueprints.main.views.search_data">search_data() (in module dashboard.blueprints.main.views)</a>
 </li>
       <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.utils.search_issues">search_issues() (in module dashboard.blueprints.timepoints.utils)</a>
@@ -1618,10 +1679,10 @@
         <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.views.sign_off">(in module dashboard.blueprints.timepoints.views)</a>
 </li>
       </ul></li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.Session.signed_off">signed_off (dashboard.models.models.Session attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Session.signed_off">signed_off (dashboard.models.models.Session attribute)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.signed_off">signed_off() (dashboard.models.models.Scan method)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Site">Site (class in dashboard.models.models)</a>
@@ -1678,10 +1739,6 @@
       </ul></li>
       <li><a href="api/dashboard.html#dashboard.task_scheduler.RemoteScheduler.start">start() (dashboard.task_scheduler.RemoteScheduler method)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint.static_page">static_page (dashboard.models.models.Timepoint attribute)</a>
-</li>
-      <li><a href="api/dashboard.blueprints.main.html#dashboard.blueprints.main.views.static_qc_page">static_qc_page() (in module dashboard.blueprints.main.views)</a>
-</li>
       <li><a href="api/dashboard.html#dashboard.exceptions.InvalidUsage.status_code">status_code (dashboard.exceptions.InvalidUsage attribute)</a>
 </li>
       <li><a href="api/dashboard.blueprints.auth.html#dashboard.blueprints.auth.oauth.GitlabSignIn.str_rnd">str_rnd (dashboard.blueprints.auth.oauth.GitlabSignIn attribute)</a>
@@ -1727,6 +1784,8 @@
 </li>
         <li><a href="api/dashboard.models.html#dashboard.models.models.ExpectedScan.study_id">(dashboard.models.models.ExpectedScan attribute)</a>
 </li>
+        <li><a href="api/dashboard.models.html#dashboard.models.models.StudyPipeline.study_id">(dashboard.models.models.StudyPipeline attribute)</a>
+</li>
         <li><a href="api/dashboard.models.html#dashboard.models.models.StudySite.study_id">(dashboard.models.models.StudySite attribute)</a>
 </li>
         <li><a href="api/dashboard.models.html#dashboard.models.models.StudyUser.study_id">(dashboard.models.models.StudyUser attribute)</a>
@@ -1746,6 +1805,8 @@
 </li>
       <li><a href="api/dashboard.blueprints.users.html#dashboard.blueprints.users.forms.StudyPermissionsForm">StudyPermissionsForm (class in dashboard.blueprints.users.forms)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.StudyPipeline">StudyPipeline (class in dashboard.models.models)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.StudySite">StudySite (class in dashboard.models.models)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.StudyUser">StudyUser (class in dashboard.models.models)</a>
@@ -1758,6 +1819,8 @@
         <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.IncidentalFindingsForm.submit">(dashboard.blueprints.timepoints.forms.IncidentalFindingsForm attribute)</a>
 </li>
         <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.NewIssueForm.submit">(dashboard.blueprints.timepoints.forms.NewIssueForm attribute)</a>
+</li>
+        <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.ScanChecklistForm.submit">(dashboard.blueprints.timepoints.forms.ScanChecklistForm attribute)</a>
 </li>
         <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.forms.TimepointCommentsForm.submit">(dashboard.blueprints.timepoints.forms.TimepointCommentsForm attribute)</a>
 </li>
@@ -1784,6 +1847,10 @@
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.TaskFile">TaskFile (class in dashboard.models.models)</a>
 </li>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.Session.tech_notes">tech_notes (dashboard.models.models.Session attribute)</a>
+</li>
+      <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.views.tech_notes">tech_notes() (in module dashboard.blueprints.timepoints.views)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Timepoint">Timepoint (class in dashboard.models.models)</a>
 </li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.Scan.timepoint">timepoint (dashboard.models.models.Scan attribute)</a>
@@ -1798,10 +1865,10 @@
       </ul></li>
       <li><a href="api/dashboard.blueprints.timepoints.html#dashboard.blueprints.timepoints.views.timepoint">timepoint() (in module dashboard.blueprints.timepoints.views)</a>
 </li>
-      <li><a href="api/dashboard.models.html#dashboard.models.models.User.timepoint_comments">timepoint_comments (dashboard.models.models.User attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.User.timepoint_comments">timepoint_comments (dashboard.models.models.User attribute)</a>
+</li>
       <li><a href="api/dashboard.models.html#dashboard.models.models.IncidentalFinding.timepoint_id">timepoint_id (dashboard.models.models.IncidentalFinding attribute)</a>
 
       <ul>
@@ -1945,6 +2012,10 @@
       <li><a href="api/dashboard.models.html#dashboard.models.models.MetricValue.value">value (dashboard.models.models.MetricValue property)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/dashboard.models.html#dashboard.models.models.StudyPipeline.view">view (dashboard.models.models.StudyPipeline attribute)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="X">X</h2>
@@ -1984,6 +2055,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">Dashboard API</a></li>
 </ul>
@@ -2004,7 +2076,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -2021,7 +2093,7 @@
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

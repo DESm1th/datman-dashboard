@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,10 +12,11 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Developer Resources" href="developer.html" />
+    <link rel="next" title="Plugins" href="plugins.html" />
     <link rel="prev" title="Installation" href="installation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -34,16 +35,16 @@
           <div class="body" role="main">
             
   <section id="configuration-glossary">
-<span id="glossary"></span><h1>Configuration Glossary<a class="headerlink" href="#configuration-glossary" title="Permalink to this headline">¶</a></h1>
+<span id="glossary"></span><h1>Configuration Glossary<a class="headerlink" href="#configuration-glossary" title="Permalink to this heading">¶</a></h1>
 <p>Listed below are all configuration values that may be set for the QC dashboard.
 They’re organized into sections based on the feature that they configure.
 These values should be set in your shell (or your uWSGI configuration file).</p>
 <section id="cluster">
-<h2>Cluster<a class="headerlink" href="#cluster" title="Permalink to this headline">¶</a></h2>
+<h2>Cluster<a class="headerlink" href="#cluster" title="Permalink to this heading">¶</a></h2>
 <p>Allows the dashboard to make use of a computing cluster (e.g.
 <a class="reference external" href="https://slurm.schedmd.com/documentation.html">Slurm</a>).</p>
 <section id="optional">
-<h3>Optional<a class="headerlink" href="#optional" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#optional" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>DASHBOARD_QSUBMIT_CMD</strong></p>
 <ul>
@@ -71,7 +72,7 @@ a folder named “queue_jobs” inside the folder where its code resides.</p></l
 </ul>
 </section>
 <section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using a non-standard submit command location</span>
 <span class="nb">export</span> <span class="nv">DASHBOARD_QSUBMIT_CMD</span><span class="o">=</span>/home/user1/sbatch
 
@@ -85,10 +86,10 @@ a folder named “queue_jobs” inside the folder where its code resides.</p></l
 </section>
 </section>
 <section id="database">
-<h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
+<h2>Database<a class="headerlink" href="#database" title="Permalink to this heading">¶</a></h2>
 <p>Configure the database backend for the dashboard.</p>
 <section id="required">
-<h3>Required<a class="headerlink" href="#required" title="Permalink to this headline">¶</a></h3>
+<h3>Required<a class="headerlink" href="#required" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>POSTGRES_PASS</strong></p>
 <ul>
@@ -100,7 +101,7 @@ been configured for the database.</p></li>
 </ul>
 </section>
 <section id="id1">
-<h3>Optional<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>POSTGRES_DATABASE</strong></p>
 <ul>
@@ -139,7 +140,7 @@ as -240.</p></li>
 </ul>
 </section>
 <section id="id2">
-<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">POSTGRES_USER</span><span class="o">=</span>dashboard_user
 <span class="nb">export</span> <span class="nv">POSTGRES_PASS</span><span class="o">=</span>somepassword
 <span class="nb">export</span> <span class="nv">POSTGRES_SRVR</span><span class="o">=</span><span class="m">127</span>.0.0.1
@@ -151,12 +152,12 @@ as -240.</p></li>
 </section>
 </section>
 <section id="email">
-<h2>Email<a class="headerlink" href="#email" title="Permalink to this headline">¶</a></h2>
+<h2>Email<a class="headerlink" href="#email" title="Permalink to this heading">¶</a></h2>
 <p>These settings configure email functionality for the dashboard. When configured
 correctly, they enable the dashboard to send email notifications to
 administrators and scheduled reminders to users.</p>
 <section id="id3">
-<h3>Optional<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>ADMINS</strong></p>
 <ul>
@@ -243,7 +244,7 @@ Can be left unset if authentication is not required by the server.</p></li>
 </ul>
 </section>
 <section id="id4">
-<h3>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure logs to be sent to email.</span>
 <span class="nb">export</span> <span class="nv">DASH_LOG_MAIL_SERVER</span><span class="o">=</span>myemailserver.ca
 <span class="nb">export</span> <span class="nv">DASH_LOG_MAIL_USER</span><span class="o">=</span>myuser
@@ -266,10 +267,10 @@ Can be left unset if authentication is not required by the server.</p></li>
 </section>
 </section>
 <section id="logging">
-<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
+<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this heading">¶</a></h2>
 <p>Configure the amount and type of logging that the dashboard does.</p>
 <section id="id5">
-<h3>Optional<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>DASH_LOG_LEVEL</strong></p>
 <ul>
@@ -305,7 +306,7 @@ dashboard runs under.</p></li>
 </ul>
 </section>
 <section id="id6">
-<h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Turn down logging</span>
 <span class="nb">export</span> <span class="nv">DASH_LOG_LEVEL</span><span class="o">=</span>ERROR
 
@@ -321,12 +322,12 @@ dashboard runs under.</p></li>
 </section>
 </section>
 <section id="user-authentication">
-<h2>User Authentication<a class="headerlink" href="#user-authentication" title="Permalink to this headline">¶</a></h2>
+<h2>User Authentication<a class="headerlink" href="#user-authentication" title="Permalink to this heading">¶</a></h2>
 <p>These settings are used to configure user authentication by OAuth. Note that at
 least one of these authentication methods MUST be configured, unless the
 dashboard is running in development mode.</p>
 <section id="id7">
-<h3>Required<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>Required<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>GitHub configuration. You can see GitHub’s instructions for acquiring a
 client ID and secret <a class="reference external" href="https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app">here</a></p>
@@ -361,9 +362,9 @@ client ID and secret <a class="reference external" href="https://docs.github.com
 </section>
 </section>
 <section id="general-application-configuration">
-<h2>General Application Configuration<a class="headerlink" href="#general-application-configuration" title="Permalink to this headline">¶</a></h2>
+<h2>General Application Configuration<a class="headerlink" href="#general-application-configuration" title="Permalink to this heading">¶</a></h2>
 <section id="id8">
-<h3>Required<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3>Required<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>FLASK_SECRET_KEY</strong></p>
 <ul>
@@ -375,7 +376,7 @@ should be hard to guess and kept as secret as possible.</p></li>
 </ul>
 </section>
 <section id="id9">
-<h3>Optional<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>FLASK_ENV</strong></p>
 <ul>
@@ -406,13 +407,13 @@ without logging in. Do not set this to True on a production instance.</p></li>
 </section>
 </section>
 <section id="github-issues">
-<h2>Github Issues<a class="headerlink" href="#github-issues" title="Permalink to this headline">¶</a></h2>
+<h2>Github Issues<a class="headerlink" href="#github-issues" title="Permalink to this heading">¶</a></h2>
 <p>Allow the dashboard to automatically create and display Github issues.</p>
 <section id="id11">
-<h3>Required<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<h3>Required<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h3>
 </section>
 <section id="id12">
-<h3>Optional<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>GITHUB_REPO</strong></p>
 <ul>
@@ -435,7 +436,7 @@ or private (False)</p></li>
 </ul>
 </section>
 <section id="id13">
-<h3>Example<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#id13" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">GITHUB_ISSUES_OWNER</span><span class="o">=</span>TIGRLab
 <span class="c1"># Issues that are made will be added to the &#39;Admin&#39; repo</span>
 <span class="nb">export</span> <span class="nv">GITHUB_REPO</span><span class="o">=</span>Admin
@@ -446,7 +447,7 @@ or private (False)</p></li>
 </section>
 </section>
 <section id="scheduler">
-<h2>Scheduler<a class="headerlink" href="#scheduler" title="Permalink to this headline">¶</a></h2>
+<h2>Scheduler<a class="headerlink" href="#scheduler" title="Permalink to this heading">¶</a></h2>
 <p>Configuration for the dashboard’s job scheduler.</p>
 <ul class="simple">
 <li><p><strong>DASHBOARD_SCHEDULER</strong></p>
@@ -492,7 +493,7 @@ only by ‘client’ instances of the dashboard.</p></li>
 </ul>
 </section>
 <section id="xnat">
-<h2>XNAT<a class="headerlink" href="#xnat" title="Permalink to this headline">¶</a></h2>
+<h2>XNAT<a class="headerlink" href="#xnat" title="Permalink to this heading">¶</a></h2>
 <p>Enable or disable the XNAT integration. Note that if you enable XNAT
 configuration, you must ensure you have added the XNAT server settings to the
 study_sites table of the database.</p>
@@ -500,7 +501,7 @@ study_sites table of the database.</p>
 dashboard, or may be configured individually for each study in the study config
 file. For more information see Datman’s configuration guide.</p>
 <section id="id14">
-<h3>Optional<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<h3>Optional<a class="headerlink" href="#id14" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>DASH_ENABLE_XNAT</strong></p>
 <ul>
@@ -557,6 +558,7 @@ through the configuration files. If this is set, XNAT_USER must be as well.</p><
 <li class="toctree-l2"><a class="reference internal" href="#xnat">XNAT</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">Dashboard API</a></li>
 </ul>
@@ -566,7 +568,7 @@ through the configuration files. If this is set, XNAT_USER must be as well.</p><
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
-      <li>Next: <a href="developer.html" title="next chapter">Developer Resources</a></li>
+      <li>Next: <a href="plugins.html" title="next chapter">Plugins</a></li>
   </ul></li>
 </ul>
 </div>
@@ -579,7 +581,7 @@ through the configuration files. If this is set, XNAT_USER must be as well.</p><
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -596,7 +598,7 @@ through the configuration files. If this is set, XNAT_USER must be as well.</p><
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

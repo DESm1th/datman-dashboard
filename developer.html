@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,11 +12,12 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Dashboard API" href="api/modules.html" />
-    <link rel="prev" title="Configuration Glossary" href="configuration.html" />
+    <link rel="prev" title="Plugins" href="plugins.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,7 +35,7 @@
           <div class="body" role="main">
             
   <section id="developer-resources">
-<h1>Developer Resources<a class="headerlink" href="#developer-resources" title="Permalink to this headline">¶</a></h1>
+<h1>Developer Resources<a class="headerlink" href="#developer-resources" title="Permalink to this heading">¶</a></h1>
 <p>This page contains additional information that may be useful to anyone
 hoping to work on the dashboard’s code.</p>
 <p>The app uses a <a class="reference external" href="https://www.postgresql.org/">postgreSQL</a> database and the
@@ -47,7 +48,7 @@ models.</p>
 behind an <a class="reference external" href="https://www.nginx.com/">NGINX</a> server. Authentication is handled
 using <a class="reference external" href="https://en.wikipedia.org/wiki/OAuth">OAuth.</a></p>
 <section id="dashboard-structure">
-<h2>Dashboard Structure<a class="headerlink" href="#dashboard-structure" title="Permalink to this headline">¶</a></h2>
+<h2>Dashboard Structure<a class="headerlink" href="#dashboard-structure" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">dashboard/models/models.py</span></code> defines the <em>Object Relational Mapping (ORM)</em>
 used by SQLAlchemy to map from the relational database to the python objects
 used in the code.</p>
@@ -60,7 +61,7 @@ nested within the blueprint. All other HTML templates are in
 are used as reusable pieces embedded in other pages.</p>
 </section>
 <section id="changing-the-database-schema">
-<h2>Changing the Database Schema<a class="headerlink" href="#changing-the-database-schema" title="Permalink to this headline">¶</a></h2>
+<h2>Changing the Database Schema<a class="headerlink" href="#changing-the-database-schema" title="Permalink to this heading">¶</a></h2>
 <p>To keep the database migrations accurate you should:</p>
 <ol class="arabic simple">
 <li><p>Make changes to models.py and not in the database directly.</p></li>
@@ -74,7 +75,7 @@ for detailed info on what to look out for.</p></li>
 </ol>
 </section>
 <section id="jinja-template-tips">
-<h2>Jinja Template Tips<a class="headerlink" href="#jinja-template-tips" title="Permalink to this headline">¶</a></h2>
+<h2>Jinja Template Tips<a class="headerlink" href="#jinja-template-tips" title="Permalink to this heading">¶</a></h2>
 <p>Flask’s HTML templates use <a class="reference external" href="https://jinja.palletsprojects.com">Jinja</a>
 to render pages. The most important thing to be aware of is that while you can
 break up your pages into smaller, more readable, chunks by saving HTML in
@@ -117,7 +118,7 @@ make sure you quoted the name of the file to be included.</p>
 </div></blockquote>
 </section>
 <section id="sqlalchemy-tips">
-<h2>SQLAlchemy Tips<a class="headerlink" href="#sqlalchemy-tips" title="Permalink to this headline">¶</a></h2>
+<h2>SQLAlchemy Tips<a class="headerlink" href="#sqlalchemy-tips" title="Permalink to this heading">¶</a></h2>
 <p>SQLAlchemy is awesome and very powerful BUT sometimes it makes really naive
 queries. If you try to work with objects from <code class="docutils literal notranslate"><span class="pre">dashboard.models</span></code> like they’re
 normal python objects, you can very easily end up generating thousands of queries
@@ -139,7 +140,7 @@ In these sorts of cases it is often better to craft your own queries using
 <a class="reference external" href="http://docs.sqlalchemy.org/en/latest/orm/query.html">SQLAlchemy’s Query API.</a></p>
 </section>
 <section id="debugging-tips">
-<h2>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this headline">¶</a></h2>
+<h2>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>To help with debugging, consider using the <a class="reference external" href="https://flask-debugtoolbar.readthedocs.io/en/latest/index.html">Flask Debug Toolbar.</a>
 It can assist in identifying bottlenecks in load time caused by excess querying by giving you a breakdown of your SQLAlchemy queries.</p></li>
@@ -167,6 +168,7 @@ It can assist in identifying bottlenecks in load time caused by excess querying 
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Resources</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dashboard-structure">Dashboard Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#changing-the-database-schema">Changing the Database Schema</a></li>
@@ -182,7 +184,7 @@ It can assist in identifying bottlenecks in load time caused by excess querying 
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="configuration.html" title="previous chapter">Configuration Glossary</a></li>
+      <li>Previous: <a href="plugins.html" title="previous chapter">Plugins</a></li>
       <li>Next: <a href="api/modules.html" title="next chapter">Dashboard API</a></li>
   </ul></li>
 </ul>
@@ -196,7 +198,7 @@ It can assist in identifying bottlenecks in load time caused by excess querying 
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -213,7 +215,7 @@ It can assist in identifying bottlenecks in load time caused by excess querying 
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

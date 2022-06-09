@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,14 +35,19 @@
           <div class="body" role="main">
             
   <section id="dashboard-blueprints-timepoints-package">
-<h1>dashboard.blueprints.timepoints package<a class="headerlink" href="#dashboard-blueprints-timepoints-package" title="Permalink to this headline">¶</a></h1>
+<h1>dashboard.blueprints.timepoints package<a class="headerlink" href="#dashboard-blueprints-timepoints-package" title="Permalink to this heading">¶</a></h1>
 <section id="module-dashboard.blueprints.timepoints">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.timepoints" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dashboard.blueprints.timepoints" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.register_bp">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.</span></span><span class="sig-name descname"><span class="pre">register_bp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.register_bp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 <section id="module-dashboard.blueprints.timepoints.emails">
-<span id="dashboard-blueprints-timepoints-emails-module"></span><h3>dashboard.blueprints.timepoints.emails module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.emails" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-timepoints-emails-module"></span><h3>dashboard.blueprints.timepoints.emails module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.emails" title="Permalink to this heading">¶</a></h3>
 <p>Timepoint blueprint email notifications.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.emails.incidental_finding_email">
@@ -60,11 +66,11 @@
 
 </section>
 <section id="module-dashboard.blueprints.timepoints.forms">
-<span id="dashboard-blueprints-timepoints-forms-module"></span><h3>dashboard.blueprints.timepoints.forms module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.forms" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-timepoints-forms-module"></span><h3>dashboard.blueprints.timepoints.forms module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.forms" title="Permalink to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.DataDeletionForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.forms.</span></span><span class="sig-name descname"><span class="pre">DataDeletionForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.DataDeletionForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.DataDeletionForm.database_records">
 <span class="sig-name descname"><span class="pre">database_records</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">('Database</span> <span class="pre">Records',),</span> <span class="pre">{})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.DataDeletionForm.database_records" title="Permalink to this definition">¶</a></dt>
@@ -80,7 +86,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.EmptySessionForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.forms.</span></span><span class="sig-name descname"><span class="pre">EmptySessionForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.EmptySessionForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.EmptySessionForm.comment">
 <span class="sig-name descname"><span class="pre">comment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextAreaField,</span> <span class="pre">('Explanation:</span> <span class="pre">',),</span> <span class="pre">{'id':</span> <span class="pre">'missing_comment',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'rows':</span> <span class="pre">4,</span> <span class="pre">'cols':</span> <span class="pre">50,</span> <span class="pre">'required':</span> <span class="pre">True,</span> <span class="pre">'placeholder':</span> <span class="pre">'Please</span> <span class="pre">describe</span> <span class="pre">what</span> <span class="pre">happened</span> <span class="pre">to</span> <span class="pre">this</span> <span class="pre">session.',</span> <span class="pre">'maxlength':</span> <span class="pre">'2048'}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.EmptySessionForm.comment" title="Permalink to this definition">¶</a></dt>
@@ -91,7 +97,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.IncidentalFindingsForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.forms.</span></span><span class="sig-name descname"><span class="pre">IncidentalFindingsForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.IncidentalFindingsForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.IncidentalFindingsForm.comment">
 <span class="sig-name descname"><span class="pre">comment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextAreaField,</span> <span class="pre">('Description:</span> <span class="pre">',),</span> <span class="pre">{'id':</span> <span class="pre">'finding-description',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'rows':</span> <span class="pre">4,</span> <span class="pre">'cols':</span> <span class="pre">65,</span> <span class="pre">'required':</span> <span class="pre">True,</span> <span class="pre">'placeholder':</span> <span class="pre">'Please</span> <span class="pre">describe</span> <span class="pre">the</span> <span class="pre">finding'}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.IncidentalFindingsForm.comment" title="Permalink to this definition">¶</a></dt>
@@ -107,7 +113,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.NewIssueForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.forms.</span></span><span class="sig-name descname"><span class="pre">NewIssueForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.NewIssueForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.NewIssueForm.body">
 <span class="sig-name descname"><span class="pre">body</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextAreaField,</span> <span class="pre">('Body:</span> <span class="pre">',),</span> <span class="pre">{'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'rows':</span> <span class="pre">4,</span> <span class="pre">'cols':</span> <span class="pre">65,</span> <span class="pre">'required':</span> <span class="pre">True,</span> <span class="pre">'placeholder':</span> <span class="pre">'Enter</span> <span class="pre">issue</span> <span class="pre">here.'}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.NewIssueForm.body" title="Permalink to this definition">¶</a></dt>
@@ -126,9 +132,25 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.ScanChecklistForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.forms.</span></span><span class="sig-name descname"><span class="pre">ScanChecklistForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.ScanChecklistForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.ScanChecklistForm.comment">
+<span class="sig-name descname"><span class="pre">comment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextAreaField,</span> <span class="pre">('Comment:',),</span> <span class="pre">{'id':</span> <span class="pre">'scan-comment',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'placeholder':</span> <span class="pre">'Add</span> <span class="pre">description',</span> <span class="pre">'rows':</span> <span class="pre">12,</span> <span class="pre">'required':</span> <span class="pre">True,</span> <span class="pre">'maxlength':</span> <span class="pre">'1028'}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.ScanChecklistForm.comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.ScanChecklistForm.submit">
+<span class="sig-name descname"><span class="pre">submit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(SubmitField,</span> <span class="pre">('Submit',),</span> <span class="pre">{})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.ScanChecklistForm.submit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.TimepointCommentsForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.forms.</span></span><span class="sig-name descname"><span class="pre">TimepointCommentsForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.TimepointCommentsForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlaskForm</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.forms.TimepointCommentsForm.comment">
 <span class="sig-name descname"><span class="pre">comment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnboundField(TextAreaField,</span> <span class="pre">(),</span> <span class="pre">{'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'render_kw':</span> <span class="pre">{'rows':</span> <span class="pre">5,</span> <span class="pre">'required':</span> <span class="pre">True,</span> <span class="pre">'placeholder':</span> <span class="pre">'Add</span> <span class="pre">new</span> <span class="pre">comment'}})&gt;</span></em><a class="headerlink" href="#dashboard.blueprints.timepoints.forms.TimepointCommentsForm.comment" title="Permalink to this definition">¶</a></dt>
@@ -143,7 +165,7 @@
 
 </section>
 <section id="module-dashboard.blueprints.timepoints.utils">
-<span id="dashboard-blueprints-timepoints-utils-module"></span><h3>dashboard.blueprints.timepoints.utils module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.utils" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-timepoints-utils-module"></span><h3>dashboard.blueprints.timepoints.utils module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.utils" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.utils.clean_issue_title">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.utils.</span></span><span class="sig-name descname"><span class="pre">clean_issue_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timepoint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.utils.clean_issue_title" title="Permalink to this definition">¶</a></dt>
@@ -171,7 +193,7 @@
 
 </section>
 <section id="module-dashboard.blueprints.timepoints.views">
-<span id="dashboard-blueprints-timepoints-views-module"></span><h3>dashboard.blueprints.timepoints.views module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.views" title="Permalink to this headline">¶</a></h3>
+<span id="dashboard-blueprints-timepoints-views-module"></span><h3>dashboard.blueprints.timepoints.views module<a class="headerlink" href="#module-dashboard.blueprints.timepoints.views" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.views.add_comment">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.views.</span></span><span class="sig-name descname"><span class="pre">add_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">study_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timepoint_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.views.add_comment" title="Permalink to this definition">¶</a></dt>
@@ -221,8 +243,24 @@
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.views.qc_files">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.views.</span></span><span class="sig-name descname"><span class="pre">qc_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">study_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timepoint_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.views.qc_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.views.review_scan">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.views.</span></span><span class="sig-name descname"><span class="pre">review_scan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.views.review_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a QC review from an AJAX request.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dashboard.blueprints.timepoints.views.sign_off">
 <span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.views.</span></span><span class="sig-name descname"><span class="pre">sign_off</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">study_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timepoint_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_num</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.views.sign_off" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dashboard.blueprints.timepoints.views.tech_notes">
+<span class="sig-prename descclassname"><span class="pre">dashboard.blueprints.timepoints.views.</span></span><span class="sig-name descname"><span class="pre">tech_notes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">study_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timepoint_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dashboard.blueprints.timepoints.views.tech_notes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -255,6 +293,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins.html">Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer Resources</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Dashboard API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">Module contents</a></li>
@@ -288,7 +327,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -305,7 +344,7 @@
       &copy;2020, TIGRLab.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
