@@ -136,6 +136,15 @@ def create_app(config=None, autocommit=False):
 
     This will load the application configuration, initialize all extensions,
     and register all blueprints.
+
+    Args:
+        config (:obj:`dict`, optional): A dictionary of config values to
+            provide to the dashboard. Can be used to override default
+            configuration from the environment.
+        autocommit (bool, optional): Whether to run the database connection
+            in autocommit mode. This may break some session based features
+            but will prevent database selects from holding connections
+            open in long running applications.
     """
     app = Flask(__name__)
     app.jinja_env.add_extension('jinja2.ext.do')
