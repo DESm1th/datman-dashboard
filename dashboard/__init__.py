@@ -78,7 +78,7 @@ class RegexConverter(BaseConverter):
         self.regex = items[0]
 
 
-def connect_db():
+def connect_db(config=None, autocommit=False):
     """Push an application context to allow external access to database models.
 
     Anything that uses a flask extension, or accesses the app config, needs to
@@ -86,7 +86,7 @@ def connect_db():
     `application context. <https://flask.palletsprojects.com/en/1.1.x/appcontext/>`_
     This function can be called to push the context.
     """  # noqa: E501
-    app = create_app()
+    app = create_app(config, autocommit)
     context = app.app_context()
     context.push()
     return db
@@ -131,7 +131,7 @@ def load_blueprints(app):
     return app
 
 
-def create_app(config=None):
+def create_app(config=None, autocommit=False):
     """Generate an application instance from the given configuration.
 
     This will load the application configuration, initialize all extensions,
@@ -144,6 +144,11 @@ def create_app(config=None):
         app.config.from_object('config')
     else:
         app.config.from_mapping(config)
+
+    if autocommit:
+        # to enable autocommit a new DB object must be created
+        global db
+        db = SQLAlchemy(session_options={'autocommit': True})
 
     db.init_app(app)
     migrate.init_app(app, db)
