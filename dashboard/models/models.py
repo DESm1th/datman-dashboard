@@ -11,8 +11,7 @@ from sqlalchemy import and_, or_, exists, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import deferred, backref
 from sqlalchemy.schema import UniqueConstraint, ForeignKeyConstraint
-from sqlalchemy.orm.exc import FlushError
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.associationproxy import association_proxy
 from psycopg2.tz import FixedOffsetTimezone
 from sqlalchemy.orm.collections import attribute_mapped_collection
@@ -31,23 +30,49 @@ class TableMixin:
     """Adds simple methods commonly needed for tables.
     """
 
-    def save(self):
-        db.session.add(self)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to commit to database. Reason "
-                                       "- {}".format(e))
+    def save(self, msg=None, obj=None):
+        if not msg:
+            msg = "Failed to commit to database."
+        self._commit(msg, db.session.add, obj)
 
-    def delete(self):
-        db.session.delete(self)
+    def delete(self, msg=None, obj=None):
+        if not msg:
+            msg = "Failed to delete from database."
+        self._commit(msg, db.session.delete, obj)
+
+    def _commit(self, msg, func, obj=None):
+        """Commit to the database.
+
+        Args:
+            msg (str): The message to use when raising an InvalidDataException.
+            func (:obj:`function`): The function to execute before commit
+                (e.g. add, delete).
+            obj (:obj:`object`, optional): The object to modify before commit.
+                If not provided, the calling class will be used.
+
+        Exceptions:
+            InvalidDataException: If commit fails for any reason aside from
+                transactions being disabled.
+        """
+        if not obj:
+            obj = self
         try:
+            # Keep the function call in the try block, because when
+            # autocommit is turned on basic calls like add and delete can
+            # also raise exceptions
+            func(obj)
             db.session.commit()
+        except InvalidRequestError as e:
+            if db.session.autocommit and "No transaction" in str(e):
+                pass
+            else:
+                self._handle_error(e, msg)
         except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to delete from database. "
-                                       "Reason - {}".format(e))
+            self._handle_error(e, msg)
+
+    def _handle_error(self, e, msg):
+        db.session.rollback()
+        raise InvalidDataException(msg + f" Reason - {e}")
 
 
 ###############################################################################
@@ -167,18 +192,13 @@ class User(UserMixin, TableMixin, db.Model):
     def request_account(self, request_form):
         request_form.populate_obj(self)
         # This is needed because the form sets it to an empty string, which
-        # causes postgres to throw an error (it expects an int)
+        # causes postgres to throw an error (it expects an int or None)
         self.id = None
-        try:
-            self.save()
-            request = AccountRequest(self.id)
-            request.save()
-        except IntegrityError:
-            # Account exists or request is already pending
-            db.session.rollback()
-        else:
-            utils.schedule_email(account_request_email,
-                                 [str(self)])
+        self.save()
+        request = AccountRequest(self.id)
+        request.save()
+        utils.schedule_email(account_request_email,
+                             [str(self)])
 
     def num_requests(self):
         """
@@ -221,17 +241,16 @@ class User(UserMixin, TableMixin, db.Model):
 
         for study in study_ids:
             if not study_ids[study]:
-                db.session.add(StudyUser(study, self.id))
+                self.save(
+                    f"Failed to update user {self.id}'s study access.",
+                    obj=StudyUser(study, self.id)
+                )
             else:
                 for site in study_ids[study]:
-                    db.session.add(StudyUser(study, self.id, site_id=site))
-        try:
-            db.session.commit()
-        except IntegrityError as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to update user {}'s study "
-                                       "access. Reason - {}"
-                                       "".format(self.id, e._message()))
+                    self.save(
+                        f"Failed to update user {self.id}'s study access.",
+                        obj=StudyUser(study, self.id, site_id=site)
+                    )
 
     def remove_studies(self, study_ids):
         """Disable study access for this user.
@@ -267,7 +286,9 @@ class User(UserMixin, TableMixin, db.Model):
             if study not in self.studies:
                 continue
             if not study_ids[study]:
-                [db.session.delete(su) for su in self.studies[study]]
+                [self.delete(f"Failed to restrict study access for {self.id}.",
+                             obj=su)
+                 for su in self.studies[study]]
             else:
                 for site in study_ids[study]:
                     found = [
@@ -276,14 +297,9 @@ class User(UserMixin, TableMixin, db.Model):
                     ]
                     if not found:
                         continue
-                    db.session.delete(found[0])
-
-        try:
-            db.session.commit()
-        except Exception as e:
-            raise InvalidDataException("Failed to restrict study access for "
-                                       "user {}. Reason - {}".format(
-                                           self.id, e))
+                    self.delete(
+                        f"Failed to restrict study access for {self.id}.",
+                        obj=found[0])
 
     def get_studies(self):
         """Get a list of studies that user has any even partial access to
@@ -410,34 +426,20 @@ class AccountRequest(TableMixin, db.Model):
         self.user_id = user_id
 
     def approve(self):
-        try:
-            self.user.is_active = True
-            db.session.delete(self)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            logger.error("Account activation failed for user {}. Reason: "
-                         "{}".format(self.user_id, e))
-            raise e
-        else:
-            user = self.user
-            utils.schedule_email(
-                account_activation_email,
-                [user.username, user.email, len(user.studies)])
+        self.user.is_active = True
+        self.delete(f"Account activation failed for user {self.user_id}.")
+        user = self.user
+        utils.schedule_email(
+            account_activation_email,
+            [user.username, user.email, len(user.studies)])
 
     def reject(self):
-        try:
-            db.session.delete(self.user)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            logger.error("Account request rejection failed for user {}. "
-                         "Reason: {}".format(self.user_id, e))
-            raise e
-        else:
-            user = self.user
-            utils.schedule_email(account_rejection_email,
-                                 [user.id, user.email])
+        self.delete(
+            f"Account request rejection failed for user {self.user_id}."
+        )
+        user = self.user
+        utils.schedule_email(account_rejection_email,
+                             [user.id, user.email])
 
     def __repr__(self):
         return "<User {} Requires Admin Review>".format(self.user_id)
@@ -524,18 +526,7 @@ class Study(TableMixin, db.Model):
                                        "for study {}".format(
                                            timepoint.site_id, self.id))
         self.timepoints.append(timepoint)
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except FlushError:
-            db.session.rollback()
-            raise InvalidDataException("Can't add timepoint {}. Already "
-                                       "exists.".format(timepoint))
-        except Exception as e:
-            db.session.rollback()
-            e.message = "Failed to add timepoint {}. Reason: {}".format(
-                timepoint, e)
-            raise
+        self.save(f"Can't add timepoint {timepoint}.")
 
         if self.email_qc:
             not_qcd = [t.name for t in self.timepoints.all() if not
@@ -554,21 +545,16 @@ class Study(TableMixin, db.Model):
             raise InvalidDataException("Can't add gold standard, file not "
                                        "readable: {}".format(gs_file))
         try:
-            db.session.add(new_gs)
-            db.session.commit()
-        except IntegrityError as e:
-            db.session.rollback()
-            str_err = str(e)
-            if 'not present in table "expected_scans"' in str_err:
+            self.save(f"Failed to add gold standard {gs_file}", obj=new_gs)
+        except InvalidDataException as e:
+            # If user messed up, add a more descriptive error msg
+            if "not present in table 'expected_scans'" in str(e):
                 raise InvalidDataException(
                     "Attempted to add gold standard with invalid "
                     "Study/Site/Tag combination."
                 )
-            else:
-                raise InvalidDataException(
-                    "Failed to add gold standard {}. Reason - "
-                    "{}".format(gs_file, e)
-                )
+            # Else re-raise original error
+            raise e
         return new_gs
 
     def delete_scantype(self, site_id, scantype):
@@ -633,7 +619,7 @@ class Study(TableMixin, db.Model):
                 raise InvalidDataException("Site {} does not exist.".format(
                     site_id))
             site = Site(site_id)
-            db.session.add(site)
+            self.save(f"Failed to create site {site_id}", obj=site)
 
         if site_id not in self.sites:
             if not create:
@@ -663,16 +649,10 @@ class Study(TableMixin, db.Model):
         if xnat_url is not None:
             study_site.xnat_url = xnat_url
 
-        db.session.add(study_site)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException(
-                "Failed to update site {} for study {}. Reason - {}".format(
-                    site_id, self.id, e
-                )
-            )
+        self.save(
+            f"Failed to update site {site_id} for study {self.id}",
+            obj=study_site
+        )
 
     def update_scantype(self, site_id, scantype, num=None, pha_num=None,
                         create=False):
@@ -724,13 +704,10 @@ class Study(TableMixin, db.Model):
                 "".format(scantype.tag, self.id, site_id)
             )
 
-        db.session.add(expected)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to update expected scans for "
-                                       "{}. Reason - {}".format(self.id, e))
+        self.save(
+            f"Failed to update expected scans for {self.id}",
+            obj=expected
+        )
 
     def num_timepoints(self, type=''):
         if type.lower() == 'human':
@@ -1087,14 +1064,7 @@ class Timepoint(TableMixin, db.Model):
 
         session = Session(self.name, num, date=date)
         self.sessions[num] = session
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            e.message = "Failed to add session {} to timepoint {}. Reason: " \
-                        "{}".format(num, self.name, e)
-            raise
+        self.save(f"Failed to add session {num} to timepoint {self.name}.")
         return session
 
     def get_blacklist_entries(self):
@@ -1174,13 +1144,11 @@ class Timepoint(TableMixin, db.Model):
         if existing:
             return
         session_redcap = SessionRedcap(self.name, session_num)
-        db.session.add(session_redcap)
-        db.session.commit()
+        self.save(obj=session_redcap)
 
     def ignore_missing_scans(self, session_num, user_id, comment):
         empty_session = EmptySession(self.name, session_num, user_id, comment)
-        db.session.add(empty_session)
-        db.session.commit()
+        self.save(obj=empty_session)
 
     def delete(self):
         """
@@ -1189,13 +1157,11 @@ class Timepoint(TableMixin, db.Model):
         """
         for num in self.sessions:
             self.sessions[num].delete()
-        db.session.delete(self)
-        db.session.commit()
+        self.delete()
 
     def report_incidental_finding(self, user_id, comment):
         new_finding = IncidentalFinding(user_id, self.name, comment)
-        db.session.add(new_finding)
-        db.session.commit()
+        self.save(obj=new_finding)
 
     def update_comment(self, user_id, comment_id, new_text):
         comment = self.get_comment(comment_id)
@@ -1205,13 +1171,11 @@ class Timepoint(TableMixin, db.Model):
 
     def add_comment(self, user_id, text):
         new_comment = TimepointComment(self.name, user_id, text)
-        db.session.add(new_comment)
-        db.session.commit()
+        self.save(obj=new_comment)
 
     def delete_comment(self, comment_id):
         comment = self.get_comment(comment_id)
-        db.session.delete(comment)
-        db.session.commit()
+        self.delete(obj=comment)
 
     def get_comment(self, comment_id):
         match = [
@@ -1228,7 +1192,7 @@ class Timepoint(TableMixin, db.Model):
         return self.name
 
 
-class TimepointComment(db.Model):
+class TimepointComment(TableMixin, db.Model):
     __tablename__ = 'timepoint_comments'
 
     id = db.Column('id', db.Integer, primary_key=True)
@@ -1263,8 +1227,7 @@ class TimepointComment(db.Model):
     def update(self, new_text):
         self.comment = new_text
         self.modified = True
-        db.session.add(self)
-        db.session.commit()
+        self.save()
 
     @property
     def timestamp(self):
@@ -1334,27 +1297,14 @@ class Session(TableMixin, db.Model):
         scan = Scan(name, self.name, self.num, series, tag, description,
                     source_id)
         self.scans.append(scan)
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to add scan {}. Reason: "
-                                       "{}".format(name, e))
+        self.save(f"Failed to add scan {name}")
         return scan
 
     def delete_scan(self, name):
         match = [scan for scan in self.scans if scan.name == name]
         if not match:
             return
-        try:
-            db.session.delete(match[0])
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            e.message = "Could not delete scan {}. Reason: {}".format(
-                name, e.message)
-            raise e
+        self.delete(f"Could not delete scan {name}", obj=match[0])
 
     def add_redcap(self, record_num, date, project=None, url=None,
                    instrument=None, config=None, rc_user=None, comment=None,
@@ -1380,13 +1330,15 @@ class Session(TableMixin, db.Model):
                                            "before adding a new one.")
         else:
             rc_record = RedcapRecord(record_num, cfg.id, date, redcap_version)
-            db.session.add(rc_record)
-            # Flush to get an ID assigned
-            db.session.flush()
-
+            self.save(obj=rc_record)
             self.redcap_record = SessionRedcap(
                 self.name, self.num, rc_record.id)
-            self.save()
+            try:
+                self.save()
+            except Exception as e:
+                # Need to purge the RedcapRecord if SessionRedcap add fails
+                self.delete(obj=rc_record)
+                raise e
 
         if rc_user:
             rc_record.user = rc_user
@@ -1395,16 +1347,7 @@ class Session(TableMixin, db.Model):
         if event_id:
             rc_record.event_id = event_id
 
-        try:
-            self.save()
-        except IntegrityError as e:
-            logger.error("Can't update redcap record {}. Reason: {}".format(
-                rc_record.id, e))
-            db.session.rollback()
-        except Exception as e:
-            logger.error("Unable to save redcap record {} for {} to database. "
-                         "Reason: {}".format(rc_record.record, self, e))
-            db.session.rollback()
+        self.save(f"Can't update redcap record {rc_record.id}")
         return rc_record
 
     def is_qcd(self):
@@ -1422,8 +1365,7 @@ class Session(TableMixin, db.Model):
         self.reviewer_id = user_id
         self.review_date = datetime.datetime.now(
             FixedOffsetTimezone(offset=TZ_OFFSET))
-        db.session.add(self)
-        db.session.commit()
+        self.save()
 
     def is_new(self):
         return ((self.scans is None and self.missing_scans())
@@ -1452,9 +1394,8 @@ class Session(TableMixin, db.Model):
                 not self.redcap_record.record.is_shared):
             # Without this, deletes wont propagate correctly to RedcapRecord
             # and you end up with orphaned records
-            db.session.delete(self.redcap_record.record)
-        db.session.delete(self)
-        db.session.commit()
+            self.delete(obj=self.redcap_record.record)
+        self.delete()
 
     def add_task(self, file_path, name=None):
         for item in self.task_files:
@@ -1463,11 +1404,9 @@ class Session(TableMixin, db.Model):
         new_task = TaskFile(self.name, self.num, file_path, file_name=name)
         self.task_files.append(new_task)
         try:
-            self.save()
+            self.save(f"Unable to add task file {file_path}")
         except Exception as e:
-            logger.error("Unable to add task file {}. Reason: {}".format(
-                file_path, e))
-            db.session.rollback()
+            logger.error(e)
             return None
         return new_task
 
@@ -1487,7 +1426,7 @@ class Session(TableMixin, db.Model):
         return "{}_{:02}".format(self.name, self.num)
 
 
-class EmptySession(db.Model):
+class EmptySession(TableMixin, db.Model):
     """
     This table exists solely so QCers can dismiss errors about empty sessions
     and comment on any follow up they've performed.
@@ -1523,7 +1462,7 @@ class EmptySession(db.Model):
         return "<EmptySession {}, {}>".format(self.name, self.num)
 
 
-class SessionRedcap(db.Model):
+class SessionRedcap(TableMixin, db.Model):
     # Using a class instead of an association table here to let us know when an
     # entry has been added without a redcap record (i.e. when a user has let us
     # know that a session is never going to get a redcap record)
@@ -1557,14 +1496,9 @@ class SessionRedcap(db.Model):
         target_session.redcap_record = SessionRedcap(target_session.name,
                                                      target_session.num,
                                                      self.record_id)
-        db.session.add(target_session)
-        try:
-            db.session.commit()
-        except Exception:
-            raise InvalidDataException("Failed to share redcap record {} with "
-                                       "session {}".format(
-                                           self.record_id, target_session))
-            return None
+        self.save(f"Failed to share redcap record {self.record_id} with "
+                  f"session {target_session}",
+                  obj=target_session)
         return target_session.redcap_record
 
     def __repr__(self):
@@ -1642,14 +1576,7 @@ class Scan(TableMixin, db.Model):
 
     def add_bids(self, name):
         self.bids_name = name
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to add bids name {} to scan "
-                                       "{}. Reason: {}".format(
-                                           name, self.id, e))
+        self.save(f"Failed to add bids name {name} to scan {self.id}")
 
     def get_study(self, study_id=None):
         return self.session.get_study(study_id=study_id)
@@ -1772,13 +1699,7 @@ class Scan(TableMixin, db.Model):
                 diffs,
                 gold_version=utils.get_software_version(gs.json_contents),
                 scan_version=utils.get_software_version(self.json_contents))
-        try:
-            db.session.add(new_diffs)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to update header diffs for {}. "
-                                       "Reason: {}".format(self, e))
+        self.save(f"Failed to update header diffs for {self}", obj=new_diffs)
         return new_diffs
 
     def get_header_diffs(self):
@@ -1808,23 +1729,13 @@ class Scan(TableMixin, db.Model):
         else:
             self.json_created = utils.file_timestamp(json_file)
 
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to update scan {} json "
-                                       "contents from file {}. Reason: "
-                                       "{}".format(self, json_file, e))
+        self.save(
+            f"Failed to update scan {self} json contents from file {json_file}"
+        )
 
     def add_error(self, error_message):
         self.conv_errors = error_message
-        try:
-            self.save()
-        except Exception as e:
-            db.session.rollback()
-            raise InvalidDataException("Failed to add conversion error "
-                                       "message for {}. Reason: {}".format(
-                                           self, e))
+        self.save(f"Failed to add conversion error message for {self}")
 
     @property
     def qc_type(self):
@@ -1972,7 +1883,7 @@ class Scantype(TableMixin, db.Model):
         return "<Scantype {}>".format(self.tag)
 
 
-class GoldStandard(db.Model):
+class GoldStandard(TableMixin, db.Model):
     __tablename__ = 'gold_standards'
 
     id = db.Column('id', db.Integer, primary_key=True)
@@ -2018,7 +1929,7 @@ class GoldStandard(db.Model):
         return os.path.basename(self.json_path)
 
 
-class RedcapRecord(db.Model):
+class RedcapRecord(TableMixin, db.Model):
     __tablename__ = 'redcap_records'
 
     id = db.Column('id', db.Integer, primary_key=True)
@@ -2050,8 +1961,7 @@ class RedcapRecord(db.Model):
         self.date = date
         if redcap_version:
             # Add to session to populate the config, or setting version fails
-            db.session.add(self)
-            db.session.flush()
+            self.save()
             self.redcap_version = redcap_version
 
     @property
@@ -2153,7 +2063,7 @@ class RedcapConfig(TableMixin, db.Model):
         return "<RedcapConfig {}>".format(self.id)
 
 
-class Analysis(db.Model):
+class Analysis(TableMixin, db.Model):
     __tablename__ = 'analyses'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -2167,7 +2077,7 @@ class Analysis(db.Model):
         return ('<Analysis {}: {}>'.format(self.id, self.name))
 
 
-class Metrictype(db.Model):
+class Metrictype(TableMixin, db.Model):
     __tablename__ = 'metrictypes'
 
     id = db.Column('id', db.Integer, primary_key=True)
@@ -2184,7 +2094,7 @@ class Metrictype(db.Model):
         return ('<MetricType {}>'.format(self.name))
 
 
-class TaskFile(db.Model):
+class TaskFile(TableMixin, db.Model):
     __tablename__ = 'session_tasks'
 
     id = db.Column('id', db.Integer, primary_key=True)
@@ -2219,7 +2129,7 @@ class TaskFile(db.Model):
 # of their own).
 
 
-class StudyUser(db.Model):
+class StudyUser(TableMixin, db.Model):
     __tablename__ = 'study_users'
 
     # This primary key will never be used anywhere but is needed because
@@ -2358,14 +2268,14 @@ class StudyPipeline(TableMixin, db.Model):
         return f'<StudyPipeline {self.study_id} - {self.pipeline_id}>'
 
 
-class PipelineScope(db.Model):
+class PipelineScope(TableMixin, db.Model):
     scope = db.Column('scope', db.String(32), primary_key=True)
 
     def __repr__(self):
         return f'<PipelineScope {self.scope}>'
 
 
-class AltStudyCode(db.Model):
+class AltStudyCode(TableMixin, db.Model):
     # stupid prelapse
     __tablename__ = 'alt_study_codes'
 
@@ -2401,7 +2311,7 @@ class AltStudyCode(db.Model):
                                                    self.code)
 
 
-class ScanGoldStandard(db.Model):
+class ScanGoldStandard(TableMixin, db.Model):
     __tablename__ = 'scan_gold_standard'
 
     scan_id = db.Column(
@@ -2461,7 +2371,7 @@ class ScanGoldStandard(db.Model):
         return self.__repr__()
 
 
-class AnalysisComment(db.Model):
+class AnalysisComment(TableMixin, db.Model):
     __tablename__ = 'analysis_comments'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -2489,7 +2399,7 @@ class AnalysisComment(db.Model):
                             self.user_id)
 
 
-class IncidentalFinding(db.Model):
+class IncidentalFinding(TableMixin, db.Model):
     __tablename__ = 'incidental_findings'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -2521,7 +2431,7 @@ class IncidentalFinding(db.Model):
             self.id, self.timepoint_id, self.user_id)
 
 
-class MetricValue(db.Model):
+class MetricValue(TableMixin, db.Model):
     __tablename__ = 'scan_metrics'
 
     id = db.Column(db.Integer, primary_key=True)
