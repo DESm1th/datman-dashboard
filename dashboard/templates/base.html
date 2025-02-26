@@ -2,73 +2,73 @@
 <html lang="en">
   <head>
     <meta charset="utf=8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if title %}
       <title>{{title}} - Kimel Lab QC Monitor</title>
     {% else %}
       <title>Kimel Lab QC Monitor</title>
     {% endif %}
 
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="/static/css/datatables.css" rel="stylesheet" media="screen" type="text/css">
-    <link href="/static/css/c3.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/bootstrap-5.3.3/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!-- <link href="/static/css/datatables.css" rel="stylesheet" media="screen" type="text/css">
+    <link href="/static/css/c3.css" rel="stylesheet" type="text/css"> -->
 
     <!-- Lab custom CSS styles go here -->
     <link href="/static/css/qc_dashboard.css" rel="stylesheet">
+    <!--
 
     <script src="/static/js/jquery-3.1.1.min.js"></script>
     <script src="/static/js/d3.v3.js" charset="utf-8"></script>
     <script src="/static/js/c3.min.js"></script>
-    <script src="/static/js/GitHub.bundle.min.js"></script>
+    <script src="/static/js/GitHub.bundle.min.js"></script> -->
 
     <!-- Font Awesome -->
-    <link href="/static/fontawesome-free-5.3.1-web/css/all.css" rel="stylesheet">
-    <script defer src="/static/fontawesome-free-5.3.1-web/js/all.js"></script>
+    <link href="/static/fontawesome-free-6.7.2-web/css/all.css" rel="stylesheet">
+    <script defer src="/static/fontawesome-free-6.7.2-web/js/all.js"></script>
 
     <!-- Autosize version 4.0.2: Automatically adjusts textarea height as input is added/deleted. -->
     <!-- source: http://www.jacklmoore.com/autosize/ -->
-    <script src="/static/js/autosize.min.js"></script>
+    <!-- <script src="/static/js/autosize.min.js"></script> -->
 
     {% block header_scripts %}{% endblock %}
 
   </head>
   <body>
-    <nav class="navbar navbar-default navbar-static-top navbar-collapse">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"><img alt="Brand" src="/static/images/camh_logo_white.png"></a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            {% if current_user.is_authenticated %}
-            <ul class="nav navbar-nav">
-              <li><a role="menuitem" href="/"><span class="header-icon glyphicon glyphicon-home"></span> Home</a></li>
+    <nav class="navbar sticky-top navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img alt="Logo" src="/static/images/camh_logo_white.png" height="24"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar" class="collapse navbar-collapse">
+          {% if current_user.is_authenticated %}
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" role="menuitem" href="/">
+                  <i class="fa-solid fa-house"></i> Home
+                </a>
+              </li>
+              <form class="d-flex" role="search"
+                    title="Pro-tip: You can narrow your search by using multiple terms and separating each term with '%'. e.g. 'STOPPD%PDT2' will find all STOPPD scans with a PDT2 tag">
+                <input type="text" class="form-control me-2" id="search-bar" placeholder="Search for a Session">
+                <button type="button" class="btn btn-primary" id="search-bar-btn"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+              </form>
             </ul>
-            <form class="navbar-form navbar-left"
-                title="Pro-tip: You can narrow your search by using multiple terms and separating each term with '%'. e.g. 'STOPPD%PDT2' will find all STOPPD scans with a PDT2 tag">
-              <div class="form-group">
-                <input type="text" class="form-control" id="search-bar" placeholder="Search for a Session">
-              </div>
-              <button type="button" class="btn btn-default" id="search-bar-btn"><span class="header-icon glyphicon glyphicon-search"></span> Search</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-              <li class=dropdown>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">View <span class="caret"></span></a>
+
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                  View <span class="caret"></span>
+                </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="Options menu">
                   <li role="presentation">
-                    <a role="menuitem" href={{ url_for('main.analysis') }}>Analyses</a>
+                    <a class="dropdown-item" role="menuitem" href={{ url_for('main.analysis') }}>Analyses</a>
                   </li>
                 </ul>
               </li>
               {% if current_user.dashboard_admin %}
-                <li class="dropdown" id="admin-menu">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                <li class="nav-item dropdown" id="admin-menu">
+                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
                       role="button" aria-haspopup="true" aria-expanded="false">
                     <span id="admin-menu-text" style="height: 23px; line-height: 23px;">Admin</span>
                     {% set num_requests = current_user.num_requests() %}
@@ -82,8 +82,8 @@
                   <ul class="dropdown-menu" role="menu"
                       aria-labelledby="admin_roles">
                     <li role="presentation">
-                      <a role="menuitem" href={{ url_for('users.manage_users') }}
-                          id="manage-users">
+                      <a class="dropdown-item" role="menuitem"
+                          href={{ url_for('users.manage_users') }} id="manage-users">
                         Manage Users
                       </a>
                     </li>
@@ -91,8 +91,8 @@
                 </li>
               {% endif %}
               {% if 'help' in config['MENU_ITEMS'] %}
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
                       role="button" aria-haspopup="true" aria-expanded="false">
                     Help
                     <span class="caret"></span>
@@ -100,7 +100,7 @@
                   <ul class="dropdown-menu" role="menu" aria-labelledby="help_menu">
                     {% for btn in config['MENU_ITEMS']['help'] %}
                       <li role="presentation">
-                        <a role="menuitem" href="{{ btn.url }}"
+                        <a class="dropdown-item" role="menuitem" href="{{ btn.url }}"
                             {% if btn.hover_text %}title="{{ btn.hover_text }}"{% endif %}>
                           {{ btn.btn_text }}
                         </a>
@@ -110,23 +110,23 @@
                 </li>
               {% endif %}
               {% if 'nav_menu' in config['MENU_ITEMS'] %}
-                <li>
+                <li class="nav-item">
                   {% for btn in config['MENU_ITEMS']['nav_menu'] %}
                     <a href="{{ btn.url }}"
-                      {% if btn.hover_text %}title="{{ btn.hover_text }}"{% endif %}>
+                        {% if btn.hover_text %}title="{{ btn.hover_text }}"{% endif %}>
                       {{ btn.btn_text }}
                     </a>
                   {% endfor %}
                 </li>
               {% endif %}
-              <li>
-                <a href="{{ url_for('users.user') }}"><span class="header-icon glyphicon glyphicon-user"></span> Profile</a>
-              </li>
-              <li>
-                <a role="menuitem" href="{{ url_for('users.logout') }}">Logout <span class="header-icon glyphicon glyphicon-log-out"></span></a>
-              </li>
+                <li class="nav-item">
+                  <a href="{{ url_for('users.user') }}"><i class="fa-solid fa-user"></i> Profile</a>
+                </li>
+                <li class="nav-item">
+                  <a role="menuitem" href="{{ url_for('users.logout') }}">Logout <i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+                </li>
             </ul>
-            {% endif %}
+          {% endif %}
         </div>
       </div>
     </nav>
@@ -147,20 +147,20 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- <script type="text/javascript" src="/static/js/site.js"></script> -->
-    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-5.3.3/bootstrap.bundle.min.js"></script>
 
     <!-- Adds dynamic table features (i.e. sorting by a column, num rows to
     display per page, pagination, filtering) -->
-    <script type="text/javascript" src="/static/js/datatables.js"></script>
+    <!-- <script type="text/javascript" src="/static/js/datatables.js"></script> -->
 
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- <script src="/static/js/ie10-viewport-bug-workaround.js"></script> -->
     <!-- md file editor - Adds the toolbar and markdown rendering for the study readme editor -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script src="/static/js/plot.js"></script>
-
+    <script src="/static/js/plot.js"></script> -->
+<!--
     <script>
       // Allows an entire table row to be made clickable with the '.clickable-row'
       // class and data-href target
@@ -195,7 +195,7 @@
           $("#request-count").insertAfter("#admin-menu-text");
         });
       {% endif %}
-    </script>
+    </script> -->
 
     {% block footer_scripts %}{% endblock %}
   </body>
