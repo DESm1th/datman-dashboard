@@ -111,8 +111,10 @@ def update_xnat_usability(scan, app_config):
         quality = 'questionable'
     elif scan.blacklisted():
         quality = 'unusable'
-    else:
+    elif scan.signed_off():
         quality = 'usable'
+    else:
+        quality = 'unrated'
 
     async_xnat_update(
         site_settings.xnat_url,
