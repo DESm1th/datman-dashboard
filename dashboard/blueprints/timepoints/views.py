@@ -315,8 +315,7 @@ def review_scan():
     comment = request.json.get("comment")
 
     if delete:
-        entry = scan.get_checklist_entry()
-        entry.delete()
+        scan.delete_checklist_entry()
         return jsonify(success=True)
 
     if update:

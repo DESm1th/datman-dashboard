@@ -1757,6 +1757,15 @@ class Scan(TableMixin, db.Model):
             utils.update_xnat_usability(self, current_app.config)
         return checklist
 
+    def delete_checklist_entry(self):
+        entry = self.get_checklist_entry()
+        if entry:
+            entry.delete()
+        if current_app.config.get('XNAT_ENABLED'):
+            # NOTE: Currently, the 'note' field on xnat cannot be cleared
+            # onced something has been added to it (at least not via API)
+            utils.update_xnat_usability(self, current_app.config)
+
     def is_linked(self):
         return self.source_id is not None
 
